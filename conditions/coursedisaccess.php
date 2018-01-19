@@ -106,7 +106,7 @@ class coursedisaccess_form extends moodleform {
         $disaccesstime = array ();
 
         foreach ($days as $day) {
-            $disaccesstime [$day] = $day . '日';
+            $disaccesstime [$day] = $day . get_string( 'days', 'block_hsmail');
         }
 
         $options = array (

@@ -104,3 +104,4 @@ $string['event_mail_sent_desc'] = 'hsmail送信';
 $string['event_mail_sent'] = '{$a}通メール送信しました';
 
 $string['task_addcue_sentmail'] = 'メールキュー＆送信スケジュール';
+$string['days'] = '日';

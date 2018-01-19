@@ -105,3 +105,4 @@ $string['event_mail_sent_desc'] = 'hsmail sent';
 $string['event_mail_sent'] = 'sent {$a} e-mails';
 
 $string['task_addcue_sentmail'] = 'Mail add queue & mail transmission schedule';
+$string['days'] = 'day';
