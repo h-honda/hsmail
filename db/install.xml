@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/hsmail/db" VERSION="20131112"
+	COMMENT="XMLDB file for Moodle blocks/hsmail" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+	<TABLES>
+		<TABLE NAME="block_hsmail" COMMENT="Default comment for block_hsmail, please edit me">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="true" />
+				<FIELD NAME="course" TYPE="int" LENGTH="20" NOTNULL="true"
+					DEFAULT="0" SEQUENCE="false" />
+				<FIELD NAME="category" TYPE="int" LENGTH="20" NOTNULL="false"
+					DEFAULT="0" SEQUENCE="false" />
+				<FIELD NAME="executedatetime" TYPE="int" LENGTH="10" NOTNULL="true"
+					DEFAULT="0" SEQUENCE="false" />
+				<FIELD NAME="repeatinterval" TYPE="int" LENGTH="10" NOTNULL="true"
+					DEFAULT="0" SEQUENCE="false" />
+				<FIELD NAME="jobtitle" TYPE="char" LENGTH="128" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="mailtitle" TYPE="char" LENGTH="256" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="mailbody" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+				<FIELD NAME="executeflag" TYPE="int" LENGTH="4" NOTNULL="true"
+					DEFAULT="0" SEQUENCE="false" />
+				<FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false"
+					DEFAULT="0" SEQUENCE="false" />
+				<FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="createuser" TYPE="int" LENGTH="20" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="modifieduser" TYPE="int" LENGTH="20" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="instantly" TYPE="int" LENGTH="1" NOTNULL="true"
+					DEFAULT="0" SEQUENCE="false" />
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
+			</KEYS>
+			<INDEXES>
+				<INDEX NAME="course_idx" UNIQUE="false" FIELDS="course" />
+			</INDEXES>
+		</TABLE>
+		<TABLE NAME="block_hsmail_plan" COMMENT="hsmail plan table">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="true" />
+				<FIELD NAME="hsmail" TYPE="int" LENGTH="20" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="plan" TYPE="char" LENGTH="64" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="planvalue" TYPE="text" NOTNULL="true" SEQUENCE="false" />
+				<FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="false" />
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
+			</KEYS>
+			<INDEXES>
+				<INDEX NAME="hsmail_idx" UNIQUE="false" FIELDS="hsmail" />
+			</INDEXES>
+		</TABLE>
+		<TABLE NAME="block_hsmail_queue" COMMENT="Mail queue">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="true" />
+				<FIELD NAME="hsmail" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="userid" TYPE="int" LENGTH="20" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="timesend" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="title" TYPE="char" LENGTH="256" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="body" TYPE="text" NOTNULL="false" SEQUENCE="false" />
+				<FIELD NAME="mailfrom" TYPE="char" LENGTH="256" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="mailto" TYPE="char" LENGTH="256" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="instantly" TYPE="int" LENGTH="1" NOTNULL="true"
+					DEFAULT="0" SEQUENCE="false" />
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
+			</KEYS>
+			<INDEXES>
+				<INDEX NAME="hsmail_idx" UNIQUE="false" FIELDS="hsmail" />
+				<INDEX NAME="timesend_idx" UNIQUE="false" FIELDS="timesend" />
+			</INDEXES>
+		</TABLE>
+		<TABLE NAME="block_hsmail_log" COMMENT="hsmail log">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="true" />
+				<FIELD NAME="hsmail" TYPE="int" LENGTH="20" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="false" />
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
+			</KEYS>
+			<INDEXES>
+				<INDEX NAME="hsmail_idx" UNIQUE="false" FIELDS="hsmail" />
+			</INDEXES>
+		</TABLE>
+		<TABLE NAME="block_hsmail_userlog" COMMENT="hsmail sent userlog">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="true" />
+				<FIELD NAME="hsmaillog" TYPE="int" LENGTH="20" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="hsmail" TYPE="int" LENGTH="20" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="userid" TYPE="int" LENGTH="20" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="false" />
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
+			</KEYS>
+			<INDEXES>
+				<INDEX NAME="hsmaillog_idx" UNIQUE="false" FIELDS="hsmaillog" />
+				<INDEX NAME="hsmail_idx" UNIQUE="false" FIELDS="hsmail" />
+			</INDEXES>
+		</TABLE>
+		<TABLE NAME="block_hsmail_temp" COMMENT="work teable">
+			<FIELDS>
+				<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="email" TYPE="char" LENGTH="100" NOTNULL="true"
+					SEQUENCE="false" />
+				<FIELD NAME="firstname" TYPE="char" LENGTH="100" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="lastname" TYPE="char" LENGTH="100" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="alternatename" TYPE="char" LENGTH="255" NOTNULL="false"
+					SEQUENCE="false" />
+				<FIELD NAME="middlename" TYPE="char" LENGTH="255" NOTNULL="false"
+					SEQUENCE="false" />
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="userid" />
+			</KEYS>
+		</TABLE>
+	</TABLES>
+</XMLDB>

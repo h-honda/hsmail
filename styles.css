@@ -1,0 +1,37 @@
+div.hsmail-view {
+
+}
+
+div.hsmail-view div.singlebutton {
+    text-align: left;
+}
+
+div.hsmail-detail div.singlebutton {
+    text-align: left;
+}
+
+div.hsmail-view input[type="submit"], div.hsmail-detail input[type="submit"]
+    {
+    padding-top: 2px;
+    padding-bottom: 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 170px;
+}
+
+div.hsmail-view table {
+    width: 100%;
+}
+
+div.hsmail-view div.paging {
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+div.hsmail-view td.rightalign {
+    text-align: right;
+}
+
+div.hsmail-view td.leftalign {
+    text-align: left;
+}
