@@ -19,13 +19,13 @@ defined ( 'MOODLE_INTERNAL' ) || die ();
 
 abstract class hsmailbase {
     protected $conditionname;
-    // 送信ユーザ登録
+    // Sending user registration.
     abstract public function regist_users_sql($courseid, $planvalue);
-    // プラン設定値生成
+    // Generate plan setting value.
     abstract public function make_plan_data($formdata);
 
-    // 特殊な入力チェックが必要な時利用
-    // $errormsg 添え字に　フィールド名　内容にエラーメッセージを記入
+    // Used when special input check is required.
+    // $errormsg Fill in the error message in the field name contents in the subscript.
     public function validation($data, $files, &$errormsg) {
         return $errormsg;
     }
@@ -52,7 +52,7 @@ SQL;
         return $ret1;
     }
 
-    // プラグイン特有の設定を返す
+    // Return plug-in specific settings.
     public function get_planvalue($hsmailid = 0) {
         if ( $hsmailid == 0 ) {
             return false;

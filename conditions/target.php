@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined('MOODLE_INTERNAL') || die();
-require_once(dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) . '/config.php');
+
 global $CFG;
 require_once( $CFG->dirroot . '/blocks/hsmail/hsmailbase.php' );
 /**
@@ -29,7 +29,7 @@ class target extends hsmailbase {
         $this->conditionname = 'target';
     }
     /**
-     * この条件に一致するユーザ一覧のSQL文を返す
+     * Return the SQL statement of the user list that matches this condition
      *
      * @param unknown $courseid
      * @param unknown $planvalue
@@ -38,21 +38,21 @@ class target extends hsmailbase {
     public function regist_users_sql($courseid, $planvalue) {
         global $DB, $CFG;
 
-        if ($planvalue == 'a') { // サイト利用者
+        if ($planvalue == 'a') { // Site user.
             $sql = <<< SQL
 SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
 SQL;
-        } else if ($planvalue == 'c') { // コース受講者
+        } else if ($planvalue == 'c') { // Course participants.
             $sql = <<< SQL
 SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
 SQL;
-        } else if (substr ( $planvalue, 0, 1 ) == 'g') { // グループ
+        } else if (substr ( $planvalue, 0, 1 ) == 'g') { // Group.
             $groupid = ( int ) substr ( $planvalue, 1 );
             $sql = <<< SQL
 SELECT userid FROM {$CFG->prefix}groups_members WHERE groupid={$groupid}
 SQL;
         } else {
-            // コーホート
+            // Cohort.
             $sql = <<< SQL
 SELECT userid FROM {$CFG->prefix}cohort_members AS cm
 WHERE cm.cohortid = {$planvalue}
@@ -63,7 +63,7 @@ SQL;
     }
 
     /**
-     * 設定配列の生成
+     * Generate configuration array
      * {@inheritDoc}
      * @see hsmailbase::make_plan_data()
      */
@@ -83,7 +83,7 @@ class target_form extends moodleform {
     public function definition() {
     }
     /**
-     * 設定画面
+     * Setting screen
      * @param unknown $mform
      * @param unknown $defaultdata
      */
@@ -99,11 +99,11 @@ class target_form extends moodleform {
             $options [''] ['c'] = get_string ( 'target_c', 'block_hsmail' );
         }
 
-        // コーホートと結合
+        // Combined with cohort.
         $cohort = $this->get_cohort_name ();
         $options [get_string ( 'cohort', 'cohort' )] = $cohort;
 
-        // グループ取得
+        // Get group name.
         $group = $this->get_group_name ();
         $options [get_string ( 'group' )] = $group;
         $mform->addElement ( 'selectgroups', 'target', get_string ( 'target', 'block_hsmail' ), $options );
@@ -124,7 +124,7 @@ class target_form extends moodleform {
         $mform->setDefaults ( $defaults );
     }
     /**
-     * コーホート名の取得
+     * get of cohort name
      * @return NULL[]
      */
     private function get_cohort_name() {
@@ -137,7 +137,7 @@ class target_form extends moodleform {
         return $list;
     }
     /**
-     * グループ名の取得
+     * get group_name
      * @return NULL[]
      */
     private function get_group_name() {

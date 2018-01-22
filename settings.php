@@ -20,7 +20,8 @@
  * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
  */
 
-// setting form
+defined('MOODLE_INTERNAL') || die;
+// Setting form.
 $settings->add ( new admin_setting_heading ( 'headerconfig', get_string ( 'headerconfig', 'block_hsmail' ), '' ) );
 
 $settings->add ( new admin_setting_configtext ( 'block_hsmail/mailmax', get_string ( 'mailmax', 'block_hsmail' ),

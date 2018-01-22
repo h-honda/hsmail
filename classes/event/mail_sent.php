@@ -19,7 +19,7 @@ defined('MOODLE_INTERNAL') || die();
 
 class mail_sent extends \core\event\base {
     protected function init() {
-        $this->data['crud'] = 'r'; // c(reate), r(ead), u(pdate), d(elete).
+        $this->data['crud'] = 'r'; // Only the following characters, c(reate), r(ead), u(pdate), d(elete).
         $this->data['edulevel'] = self::LEVEL_OTHER;
     }
 

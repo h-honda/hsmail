@@ -16,8 +16,8 @@
 
 
 defined('MOODLE_INTERNAL') || die();
-$plugin->version  = 2018011900;
+$plugin->version  = 2018012200;
 $plugin->requires = 2016052303;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '1.4.1';
+$plugin->release = '1.4.2';
 $plugin->component = 'block_hsmail';

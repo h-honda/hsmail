@@ -19,14 +19,14 @@ defined ( 'MOODLE_INTERNAL' ) || die ();
 require_once( 'hsmaillib_common.php' );
 
 /**
- * hs_mail_libクラスのラッパー
+ * A wrapper for the hs_mail_lib class
  */
 class hsmaillib_wrapper {
 
-    // メール送信FROMアドレス
+    // Email transmission FROM address.
     private $mailfrom = '';
     private $mailfromdisp = '';
-    // メール送信のタイトル
+    // Title of mail transmission.
     private $mailsubject = '';
     public function __construct() {
         $this->mailfrom = get_config('core', 'noreplyaddress');
@@ -34,20 +34,20 @@ class hsmaillib_wrapper {
     }
 
     /**
-     * 以前のpearのmailクラスの代わりに使用する為に、パラメタを変換する
+     * Convert the parameters to use instead of the previous pear mail class
      *
-     * @param unknown $recipients 送信先（受信者）
+     * @param unknown $recipients Destination (receiver)
      * @param unknown $headers
      * @param unknown $body
      */
     public function send($recipients, $headers, $body) {
         $to = $recipients;
-        $tmpfrom = ($headers ['From'] == '') ? $this->mailfrom: $headers ['From'];
+        $tmpfrom = ( $headers ['From'] == '' ) ? $this->mailfrom : $headers['From'];
         $from = array (
                 'address' => $tmpfrom
         );
         if (isset ( $headers ['FromName'] ) && $headers['FromName'] != '') {
-            // fromの表示名称が指定された場合
+            // When the from display name is specified.
             $from['name'] = $headers ['FromName'];
         }
         if ($tmpfrom == $this->mailfrom ) {

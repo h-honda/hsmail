@@ -15,7 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined ( 'MOODLE_INTERNAL' ) || die ();
-require_once( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) . '/config.php' );
 global $CFG;
 require_once( $CFG->dirroot . '/blocks/hsmail/hsmailbase.php' );
 require_once( $CFG->dirroot . '/lib/completionlib.php' );
@@ -33,7 +32,7 @@ class assigncomplete extends hsmailbase {
 
 
     /**
-     * この条件に一致するユーザ一覧のSQL文を返す
+     * Return the SQL statement of the user list that matches this condition
      *
      * @param unknown $courseid
      * @param unknown $planvalue
@@ -57,7 +56,7 @@ SQL;
             $assignunselectednumber = $assignnumber - $assignselectednumber;
         }
 
-        if ( $planvalue [0] == 'c' ) { // 課題完了
+        if ( $planvalue [0] == 'c' ) { // Assign completed.
 
             $sql = <<< SQL
 SELECT cmc.userid FROM {$CFG->prefix}course_modules_completion AS cmc
@@ -76,7 +75,7 @@ WHERE ra.modifierid >0 AND con.instanceid = {$courseid})
 GROUP BY cmc.userid
 HAVING count(cmc.userid) = {$assignselectednumber}
 SQL;
-        } else if ( $planvalue [0] == 'i' ) { // 課題未完了
+        } else if ( $planvalue [0] == 'i' ) { // Assign not completed.
 
             if ( $assignunselectednumber == 0 ) {
                 $sql = <<< SQL
@@ -108,7 +107,7 @@ HAVING count(cmc.userid) = {$assignselectednumber}
 )
 SQL;
             }
-        } else { // 設定なし
+        } else { // No setting.
             $sql = <<< SQL
 SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
 SQL;
@@ -118,7 +117,7 @@ SQL;
     }
 
     /**
-     *  設定配列の生成
+     *  Generate configuration array
      * {@inheritDoc}
      * @see hsmailbase::make_plan_data()
      */
@@ -143,7 +142,7 @@ SQL;
     }
 
     /**
-     * 個別のエラーチェックをする
+     * Perform an individual error check
      * {@inheritDoc}
      * @see hsmailbase::validation()
      */
@@ -167,14 +166,14 @@ class assigncomplete_form extends moodleform {
     }
 
     /**
-     * 設定画面
+     * Setting screen
      * @param unknown $mform
      * @param unknown $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
         global $CFG, $DB, $COURSE;
 
-        // 課題完了ステータス
+        // Assign complete status.
         $options = array (
                 'a' => '-',
                 'c' => get_string ( 'assigncomplete_c', 'block_hsmail' ),
@@ -201,7 +200,7 @@ class assigncomplete_form extends moodleform {
         }
         $mform->setDefaults ( $defaults );
 
-        // 課題名
+        // Assign name.
         $sql = <<< SQL
 SELECT  a.id, a.name FROM {assign} a
 INNER JOIN {course_modules} cm ON cm.instance = a.id AND ( completion = 1 OR completion = 2)
@@ -226,12 +225,12 @@ SQL;
         $mform->setType ( 'assignname', PARAM_TEXT );
 
         if ( $defaultdata === null ) {
-            // Set default data (if any)
+            // Set default data (if any).
             $defaults = array (
                     'assignname' => 'a'
             );
         } else if ( isset ( $defaultdata ['planvalue'] [1] ) ) {
-            // Edit
+            // Edit.
             $defaults = array (
                     'assignname' => explode ( ',', $defaultdata ['planvalue'] [1] )
             );

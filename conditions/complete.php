@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined ( 'MOODLE_INTERNAL' ) || die ();
-require_once( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) . '/config.php' );
 global $CFG;
 require_once($CFG->dirroot . '/blocks/hsmail/hsmailbase.php' );
 require_once($CFG->dirroot . '/lib/completionlib.php' );
+
 /**
  *
  * @author h-honda
@@ -30,7 +30,7 @@ class complete extends hsmailbase {
         $this->conditionname = 'complete';
     }
     /**
-     * この条件に一致するユーザ一覧のSQL文を返す
+     * Return the SQL statement of the user list that matches this condition
      *
      * @param unknown $courseid
      * @param unknown $planvalue
@@ -39,18 +39,18 @@ class complete extends hsmailbase {
     public function regist_users_sql($courseid, $planvalue) {
         global $DB, $CFG;
 
-        if ( $planvalue == 'c' ) { // コース完了
+        if ( $planvalue == 'c' ) { // Course completed.
             $sql = <<< SQL
 SELECT userid FROM {$CFG->prefix}course_completions WHERE course={$courseid} AND timecompleted>0
 SQL;
-        } else if ( $planvalue == 'i' ) { // コース未完了
+        } else if ( $planvalue == 'i' ) { // Course not completed.
             $sql = <<< SQL
 SELECT userid FROM {$CFG->prefix}block_hsmail_temp
 WHERE userid NOT IN
 (SELECT userid FROM {$CFG->prefix}course_completions
 WHERE course={$courseid} AND timecompleted>0)
 SQL;
-        } else { // 設定なし
+        } else { // No setting.
             $sql = <<< SQL
 SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
 SQL;
@@ -60,7 +60,7 @@ SQL;
     }
 
     /**
-     * 設定配列の生成
+     * Generate configuration array
      * {@inheritDoc}
      * @see hsmailbase::make_plan_data()
      */
@@ -84,7 +84,7 @@ class complete_form extends moodleform {
     public function definition() {
     }
     /**
-     * 設定画面
+     * Setting screen
      * @param unknown $mform
      * @param unknown $defaultdata
      */
@@ -93,7 +93,7 @@ class complete_form extends moodleform {
 
         $completioninfo = new completion_info ( $COURSE );
         if ( ! $completioninfo->is_enabled () ) {
-            return; // 完了トラッキング無効の場合は無効
+            return; // Invalid when completion tracking is disabled.
         }
 
         $options = array (
@@ -112,12 +112,12 @@ class complete_form extends moodleform {
         $mform->setType ( 'complete', PARAM_TEXT );
 
         if ( $defaultdata === null ) {
-            // Set default data (if any)
+            // Set default data (if any).
             $defaults = array (
                     'complete' => 'a'
             );
         } else {
-            // Edit
+            // Edit.
             $defaults = array (
                     'complete' => $defaultdata ['planvalue']
             );

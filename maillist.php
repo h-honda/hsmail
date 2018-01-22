@@ -17,7 +17,6 @@
 require_once( dirname ( dirname ( dirname ( __FILE__ ) ) ) . '/config.php' );
 
 $id = optional_param ( 'id', 0, PARAM_INT );
-// $clicktype = optional_param('click_button', 0, PARAM_INT);
 
 if ( $id ) {
     if ( ! $course = $DB->get_record ( 'course', array (
@@ -28,40 +27,34 @@ if ( $id ) {
 } else {
     error ( 'Course ID error' );
 }
-
+require_sesskey();
 require_login ( $course );
-// 権限チェック
+// Authority check.
 $context = context_course::instance ( $id );
 if (! has_capability ( 'block/hsmail:viewmaillist', $context )) {
     throw new moodle_exception ( 'You dont have capability' );
 }
-// 表示処理
-// 設定
-// $PAGE->requires->js(new moodle_url('/blocks/hsmail/jobs.js'));
-
+// Display processing.
 $PAGE->set_url ( '/blocks/hsmail/maillist.php', array (
         'id' => $id
-) ); // このファイルのURLを設定
-$PAGE->set_title ( get_string ( 'sentlist', 'block_hsmail' ) ); // ブラウザのタイトルバーに表示されるタイトル
-$PAGE->set_heading ( $course->shortname ); // ヘッダーに表示する文字列
+) ); // Set the URL of this file.
+$PAGE->set_title ( get_string ( 'sentlist', 'block_hsmail' ) ); // Title displayed in browser's title bar.
+$PAGE->set_heading ( $course->shortname ); // String to display in header.
 $PAGE->set_pagelayout ( 'incourse' );
-$PAGE->navbar->add ( get_string ( 'sentlist', 'block_hsmail' ), "?id=$id" ); // ヘッダーのナビゲーションに項目追加
+$PAGE->navbar->add ( get_string ( 'sentlist', 'block_hsmail' ), "?id=$id" ); // Add item to header navigation.
 
-// 現在の登録Jobを読込み
+// Read the current registration Job.
 
-// フォームの生成
+// Form generation.
 require_once( 'lib.php' );
 $mform = new hsmail_maillist_form ();
 
-// ヘッダー出力
+// Header output.
 echo $OUTPUT->header ();
 
-// Replace the following lines with you own code
-echo $OUTPUT->heading ( get_string ( 'sentlist', 'block_hsmail' ) ); // メインエリアのタイトル
+// Replace the following lines with you own code.
+echo $OUTPUT->heading ( get_string ( 'sentlist', 'block_hsmail' ) ); // Title of main area.
 
-// / 表示 START
-
-// echo '表示内容をここに記述';
 echo $OUTPUT->container_start ( 'hsmail-view' );
 $mform->display ();
 echo $OUTPUT->container_end ();

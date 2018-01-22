@@ -28,43 +28,42 @@ if ( $id ) {
 } else {
     error ( 'Course ID error' );
 }
-
+require_sesskey();
 require_login ( $course );
-// 権限チェック
+// Authority check.
 $context = context_course::instance ( $id );
 if ( ! has_capability ( 'block/hsmail:addcondition', $context ) ) {
     throw new moodle_exception ( 'You dont have capability' );
 }
-// 表示処理
-// 設定
+// Display processing.
 $PAGE->requires->js ( new moodle_url ( '/blocks/hsmail/jobs.js' ) );
 
 $PAGE->set_url ( '/blocks/hsmail/sentlist.php', array (
-        'id' => $id
-) ); // このファイルのURLを設定
-$PAGE->set_title ( get_string ( 'sent_confirm', 'block_hsmail' ) ); // ブラウザのタイトルバーに表示されるタイトル
-$PAGE->set_heading ( $course->shortname ); // ヘッダーに表示する文字列
+        'id' => $id,
+        'sesskey' => sesskey()
+) ); // Set the URL of this file.
+$PAGE->set_title ( get_string ( 'sent_confirm', 'block_hsmail' ) ); // Title displayed in browser's title bar.
+$PAGE->set_heading ( $course->shortname ); // String to display in header.
 $PAGE->set_pagelayout ( 'incourse' );
-$PAGE->navbar->add ( get_string ( 'sent_confirm', 'block_hsmail' ), "?id=$id" ); // ヘッダーのナビゲーションに項目追加
+$PAGE->navbar->add ( get_string ( 'sent_confirm', 'block_hsmail' ),
+        "?id=$id&sesskey=".sesskey() ); // Add item to header navigation.
 
-// 現在の登録Jobを読込み
+// Read the current registration Job.
 
-// フォームの生成
+// Form generation.
 require_once( 'lib.php' );
 $mform = new hsmail_sent_form ();
 
-// ヘッダー出力
+// Header output.
 echo $OUTPUT->header ();
 
-// Replace the following lines with you own code
-echo $OUTPUT->heading ( get_string ( 'sent_confirm', 'block_hsmail' ) ); // メインエリアのタイトル
+// Replace the following lines with you own code.
+echo $OUTPUT->heading ( get_string ( 'sent_confirm', 'block_hsmail' ) ); // Title of main area.
 
-// / 表示 START
-
-// echo '表示内容をここに記述';
 echo $OUTPUT->container_start ( 'hsmail-view' );
 echo $OUTPUT->single_button ( new moodle_url ( '/blocks/hsmail/jobsetting.php', array (
-        'id' => $COURSE->id
+        'id' => $COURSE->id,
+        'sesskey' => sesskey()
 ) ), get_string ( 'joblist', 'block_hsmail' ) );
 $mform->display ();
 echo $OUTPUT->container_end ();

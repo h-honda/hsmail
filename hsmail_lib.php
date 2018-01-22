@@ -15,7 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined('MOODLE_INTERNAL') || die();
-require_once( dirname ( dirname ( dirname ( __FILE__ ) ) ) . '/config.php' );
 require_once($CFG->libdir . '/formslib.php' );
 
 class hsmail_detailform extends moodleform {
@@ -38,7 +37,7 @@ class hsmail_detailform extends moodleform {
 
         $mform = $this->_form; // Don't forget the underscore!
 
-        // 基本情報
+        // Basic information.
         global $CFG;
         require_once( $CFG->dirroot . '/blocks/hsmail/conditions/basic.php' );
         $basicplan = new basic ();
@@ -50,7 +49,7 @@ class hsmail_detailform extends moodleform {
         $basicobj = new basic_form ();
         $basicobj->build_form ( $mform, $defaultdata );
 
-        // 基本以外の詳細設定画面の表示ロジック
+        // Display logic of detailed setting screen other than basic.
         foreach ($hsmailobj->conditionfiles as $tmp) {
             if ( $tmp == 'basic' ) {
                 continue;
@@ -79,13 +78,13 @@ class hsmail_detailform extends moodleform {
     public function get_data() {
         $data = parent::get_data ();
         if ( !is_null ( $data ) && ! isset ( $data->instantly ) ) {
-            $data->instantly = 0; // 「即時配信」チェックボックスoffの場合は 0
+            $data->instantly = 0; // 0 for immediate delivery check box off.
         }
         return $data;
     }
 
     /**
-     * 個別のチェックがある場合
+     * When there is an individual check
      * @param unknown $data
      * @param unknown $files
      */
@@ -93,7 +92,7 @@ class hsmail_detailform extends moodleform {
         global $CFG;
         $errormsg = array ();
         $hsmailobj = new hsmail_lib ();
-        // 基本以外の詳細設定画面の表示ロジック
+        // Display logic of detailed setting screen other than basic.
         foreach ($hsmailobj->conditionfiles as $tmp) {
             if ( $tmp == 'basic' ) {
                 continue;
@@ -112,19 +111,19 @@ class hsmail_detailform extends moodleform {
 }
 
 class hsmail_lib {
-    // 条件ファイルの位置
+    // Location of condition file.
     protected $conditiondir;
 
-    // 条件ファイルの一覧
+    // List of condition files.
     public $conditionfiles;
 
-    // データ総数
+    // Total number of data.
     protected $totalcount;
 
-    // ページ毎表示件数
-    protected $perpage = 20; // デフォルト値：ブロックインスタンス設定値で上書きされる
+    // Number of pages displayed per page.
+    protected $perpage = 20; // Default value: Overwritten by block instance setting value.
 
-    // ページ番号
+    // Page number.
     protected $page = 0;
 
     public function __construct() {
@@ -132,7 +131,7 @@ class hsmail_lib {
 
         $this->conditiondir = $CFG->dirroot . '/blocks/hsmail/conditions/';
         $resdir = opendir ( $this->conditiondir );
-        // ファイル名一覧を取得
+        // Get file name list.
         while ( $filename = readdir ( $resdir ) ) {
             if ( is_dir ( $filename )) {
                 continue;
@@ -143,34 +142,34 @@ class hsmail_lib {
     }
 
     /**
-     * ジョブの内容変更
+     * Change content of job
      * @param unknown $data
      * @param unknown $plan
      * @throws moodle_exception
      */
     public function update_job($data, $plan) {
         global $DB, $USER;
-        // jobidのチェック
+        // Check jobid.
         if ( $data->jobid == 0 ) {
             return;
         }
 
-            // 実行中でないかチェック
+        // Check if it is running.
         $basicdata = $DB->get_record ( 'block_hsmail', array (
                 'id' => $data->jobid
         ) );
         if ( $basicdata->executeflag == 2 ) {
-            // 実行中の場合は変更できないメッセージを表示
+            // Display a message that can not be changed if it is running.
             throw new moodle_exception ( get_string ( 'err_already', 'block_hsmail' ) );
             return;
         }
 
-        // トランザクション　ここから
+        // Transaction from here.
         $transaction = null;
         try {
             $transaction = $DB->start_delegated_transaction ();
-            // 設定情報の変更
-            // 基本情報の登録
+            // Change of setting information.
+            // Register basic information.
             $now = date ( 'U' );
             if ( $data->timing == 1 ) {
                 $settiming = ($data->repeatinterval == 0) ? 0 : $now;
@@ -191,7 +190,7 @@ class hsmail_lib {
             $DB->update_record ( 'block_hsmail', $dataobject );
 
             $id = $data->jobid;
-            // 各条件の登録
+            // Registering each condition.
             foreach ($plan as $key => $value) {
                 if ( is_null ( $key )) {
                     continue;
@@ -203,7 +202,7 @@ class hsmail_lib {
                 if ( $ret === false ) {
                     throw new moodle_exception ( get_string ( 'err_planid', 'block_hsmail' ) . "->{$id}->{$key}" );
                 }
-                // プラン
+                // Plan.
                 $dataobject = array (
                         'id' => $ret->id,
                         'hsmail' => $id,
@@ -218,27 +217,27 @@ class hsmail_lib {
         } catch ( Exception $e ) {
             $transaction->rollback ( $e );
         }
-        // 　トランザクション　ここまで
+        // Transaction end so far.
     }
 
-    // ジョブの削除
+    // Delete job.
     public function delete_job($jobid) {
         global $DB;
-        // jobidのチェック
+        // Check jobid.
         if ( $jobid == 0 ) {
             return;
         }
 
-            // 実行中でないかチェック
+            // Check if it is running.
         $basicdata = $DB->get_record ( 'block_hsmail', array (
                 'id' => $jobid
         ) );
         if ( $basicdata->executeflag == 2 ) {
-            // 実行中の場合は変更できないメッセージを表示
+            // Display a message that can not be changed if it is running.
             throw new moodle_exception ( get_string ( 'err_already', 'block_hsmail' ) );
             return;
         }
-        // トランザクション　ここから
+        // Transaction from here.
         $transaction = null;
         try {
             $transaction = $DB->start_delegated_transaction ();
@@ -246,14 +245,14 @@ class hsmail_lib {
             $ret = $DB->get_records ( 'block_hsmail_plan', array (
                     'hsmail' => $jobid
             ), 'id' );
-            // 各条件の削除
+            // Deletion of each condition.
             foreach ($ret as $tmp) {
                 $DB->delete_records ( 'block_hsmail_plan', array (
                         'id' => $tmp->id
                 ) );
             }
 
-            // 送信Jobの削除
+            // Delete outgoing job.
             $DB->delete_records ( 'block_hsmail', array (
                     'id' => $jobid
             ) );
@@ -261,7 +260,7 @@ class hsmail_lib {
         } catch ( Exception $e ) {
             $transaction->rollback ( $e );
         }
-        // 　トランザクション　ここまで
+        // Transaction end so far.
     }
     public function insert_job($data, $plan = null) {
         global $USER, $COURSE, $DB;
@@ -275,11 +274,11 @@ class hsmail_lib {
                 throw new moodle_exception ( "hsmail planvalue is null. You should set the planvalue." );
             }
         }
-        // トランザクション　ここから
+        // Transaction from here.
         $transaction = null;
         try {
             $transaction = $DB->start_delegated_transaction ();
-            // 基本情報の登録
+            // Register basic information.
             $now = date ( 'U' );
             if ( $data->timing == 1 ) {
                 $settiming = ($data->repeatinterval == 0) ? 0 : $now;
@@ -305,12 +304,12 @@ class hsmail_lib {
 
             $id = $DB->insert_record ( 'block_hsmail', $dataobject, true );
 
-            // 各条件の登録
+            // Registering each condition.
             foreach ($plan as $key => $value) {
                 if (is_null ( $key )) {
                     continue;
                 }
-                    // plan
+                    // Plan.
                 $dataobject = array (
                         'hsmail' => $id,
                         'plan' => $key,
@@ -326,11 +325,11 @@ class hsmail_lib {
         }
     }
 
-    // ページング用データをset 2014-04-18
+    // Set paging data to set 2014-04-18.
     public function set_paging_data($reservation, $flag) {
         global $CFG, $DB, $COURSE;
 
-        // 総数取得
+        // Total number acquisition.
         $sql = <<< SQL
 SELECT COUNT(*) AS cnt
 FROM {$CFG->prefix}block_hsmail AS bh
@@ -341,12 +340,12 @@ SQL;
                 $COURSE->id,
                 $COURSE->category,
                 $flag
-        ) ); // 総数取得
+        ) ); // Total number acquisition.
         $this->totalcount = $datacount->cnt;
 
         $context = context_course::instance ( $COURSE->id );
 
-        // ページ毎表示件数取得
+        // Acquire number of items per page.
         $sql = "SELECT configdata FROM {$CFG->prefix}block_instances WHERE blockname='hsmail' AND parentcontextid=?";
         $blockconfigdata = $DB->get_record_sql ( $sql, array (
                 $context->id
@@ -358,10 +357,10 @@ SQL;
             }
         }
 
-        $this->page = optional_param ( 'page', 0, PARAM_INT ); // page番号
+        $this->page = optional_param ( 'page', 0, PARAM_INT ); // Page number.
     }
 
-    // ページングHTML作成 2014-04-18
+    // Create paging HTML 2014-04-18.
     public function get_paging($url) {
         global $COURSE, $OUTPUT;
         $baseurl = new moodle_url ( $url, array (
@@ -371,7 +370,7 @@ SQL;
         return $OUTPUT->render ( $pagingbar );
     }
 
-    // 今現在登録されているJob一覧を取得する
+    // Acquire the currently registered job list.
     public function get_job_list($flag = 0) {
         global $CFG, $DB, $COURSE;
 
@@ -384,7 +383,7 @@ SQL;
             $orderinstantly = 'bh.instantly DESC,';
         }
 
-        // 2014-04-18 ページング用データをset
+        // 2014-04-18 Set paging data as set.
         $this->set_paging_data ( $reservation, $flag );
 
         $sql = <<< SQL
@@ -397,16 +396,15 @@ WHERE bh.course = ? AND bh.category = ? AND executeflag <= ? {$reservation}
 ORDER BY {$orderinstantly} bh.executedatetime {$sortorder}
 SQL;
 
-        // $list = $DB->get_records_sql($sql,array( $COURSE->id, $COURSE->category, $flag));
         $list = $DB->get_records_sql ( $sql, array (
                 $COURSE->id,
                 $COURSE->category,
                 $flag
-        ), $this->page * $this->perpage, $this->perpage ); // 2014-04-16 ページング対応
+        ), $this->page * $this->perpage, $this->perpage ); // 2014-04-16 Paging support.
         return $list;
     }
 
-    // 配信済みユーザを返す
+    // Return a delivered user.
     public function get_sent_list() {
         global $DB, $CFG;
         $sql = <<< SQL
@@ -420,10 +418,10 @@ SQL;
         }
         return $list;
     }
-    // 未配信ユーザを返す
+    // Return undelivered users.
     public function get_send_list() {
         global $DB, $CFG;
-        // キューから残りのメール数を取得
+        // Retrieve the number of remaining mails from the queue.
         $sql = <<< SQL
 SELECT hsmail,count(*) AS c FROM {$CFG->prefix}block_hsmail_queue
 GROUP BY hsmail
@@ -436,12 +434,13 @@ SQL;
         return $list;
     }
 
-    // コースの未配信数を返す
+    // Return the number of undelivered courses.
     public function get_course_send_list($courseid) {
         global $DB, $CFG;
-        // キューから残りのメール数を取得
+        // Retrieve the number of remaining mails from the queue.
         $sql = <<< SQL
-SELECT count(*) AS cnt FROM {$CFG->prefix}block_hsmail_queue AS T1 INNER JOIN {$CFG->prefix}block_hsmail AS T2 ON T1.hsmail=T2.id WHERE T2.course=?;
+SELECT count(*) AS cnt FROM {$CFG->prefix}block_hsmail_queue AS T1
+INNER JOIN {$CFG->prefix}block_hsmail AS T2 ON T1.hsmail=T2.id WHERE T2.course=?;
 SQL;
         $ret = $DB->get_record_sql ( $sql, array (
                 $courseid
@@ -454,7 +453,7 @@ SQL;
         }
     }
 
-    // 配信開始、完了を返す
+    // Delivery start, return completion.
     public function get_mail_start_end() {
         global $DB, $CFG;
         $sql = <<< SQL
@@ -471,11 +470,11 @@ SQL;
         return $list;
     }
 
-    // 自分宛てのメール一覧を取得する
+    // Retrieve mail list addressed to you.
     public function get_mail_list() {
         global $CFG, $DB, $COURSE, $USER;
 
-        // 2014-04-18 ページング用データをset
+        // 2014-04-18 Set paging data as set.
         $this->set_paging_data_mail_list ();
 
         $sql = <<< SQL
@@ -491,16 +490,16 @@ SQL;
                 $COURSE->id,
                 $COURSE->category,
                 $USER->id
-        ), $this->page * $this->perpage, $this->perpage ); // 2014-04-16 ページング対応
+        ), $this->page * $this->perpage, $this->perpage ); // 2014-04-16 Paging support.
 
         return $list;
     }
 
-    // ページング用データをset
+    // Set paging data as set.
     public function set_paging_data_mail_list() {
         global $CFG, $DB, $COURSE, $USER;
 
-        // 総数取得
+        // Total number acquisition.
         $sql = <<< SQL
 SELECT COUNT(*) AS cnt
 FROM {$CFG->prefix}block_hsmail_userlog AS ul
@@ -512,12 +511,12 @@ SQL;
                 $COURSE->id,
                 $COURSE->category,
                 $USER->id
-        ) ); // 総数取得
+        ) ); // Total number acquisition.
         $this->totalcount = $datacount->cnt;
 
         $context = context_course::instance ( $COURSE->id );
 
-        // ページ毎表示件数取得
+        // Acquire number of items per page.
         $sql = "SELECT configdata FROM {$CFG->prefix}block_instances WHERE blockname='hsmail' AND parentcontextid=?";
         $blockconfigdata = $DB->get_record_sql ( $sql, array (
                 $context->id
@@ -529,10 +528,10 @@ SQL;
             }
         }
 
-        $this->page = optional_param ( 'page', 0, PARAM_INT ); // page番号
+        $this->page = optional_param ( 'page', 0, PARAM_INT ); // Page number.
     }
 
-    // 自分宛てのメール一覧を取得する
+    // Retrieve mail list addressed to you.
     public function get_mail_detail() {
         global $CFG, $DB, $COURSE, $USER;
 

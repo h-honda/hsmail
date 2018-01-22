@@ -29,6 +29,7 @@ if ($id) {
     error ( 'Course ID error' );
 }
 
+require_sesskey();
 require_login ( $course );
 
 $context = context_course::instance ( $id );
@@ -38,12 +39,13 @@ if ( ! has_capability ( 'block/hsmail:addcondition', $context ) ) {
 
 $PAGE->set_url ( '/blocks/hsmail/edit.php', array (
         'id' => $id,
-        'jobid' => $jobid
-) ); // このファイルのURLを設定
-$PAGE->set_title ( get_string ( 'condition1', 'block_hsmail' ) ); // ブラウザのタイトルバーに表示されるタイトル
-$PAGE->set_heading ( $course->shortname ); // ヘッダーに表示する文字列
+        'jobid' => $jobid,
+        'sesskey' => sesskey()
+) ); // Set the URL of this file.
+$PAGE->set_title ( get_string ( 'condition1', 'block_hsmail' ) ); // Title displayed in browser's title bar.
+$PAGE->set_heading ( $course->shortname ); // String to display in header.
 $PAGE->set_pagelayout ( 'incourse' );
-$PAGE->navbar->add ( get_string ( 'condition1', 'block_hsmail' ), "?id=$id&jobid=$jobid" );
+$PAGE->navbar->add ( get_string ( 'condition1', 'block_hsmail' ), "?id=$id&jobid=$jobid&sesskey=".sesskey() );
 
 require_once( 'hsmail_lib.php' );
 $mform = new hsmail_detailform ( $jobid );
@@ -51,13 +53,13 @@ $mform = new hsmail_detailform ( $jobid );
 if ( $mform->is_cancelled () ) {
     // Handle form cancel operation, if cancel button is present on form.
     redirect ( new moodle_url ( '/blocks/hsmail/jobsetting.php', array (
-            'id' => $id
+            'id' => $id, 'sesskey' => sesskey()
     ) ) );
 } else if ( $fromform = $mform->get_data () ) {
 
     $obj = new hsmail_lib ();
     $plan = array ();
-    // プラン設定生成
+    // Generate plan setting.
     global $CFG;
     foreach ($obj->conditionfiles as $tmp) {
         $classfilename = $tmp . '.php';
@@ -65,15 +67,15 @@ if ( $mform->is_cancelled () ) {
         $tmpobj = new $tmp ();
         $plan = $plan + $tmpobj->make_plan_data ( $fromform );
     }
-    // DBへの登録
+    // Registration to DB.
     $obj->update_job ( $fromform, $plan );
     redirect ( new moodle_url ( '/blocks/hsmail/jobsetting.php', array (
-            'id' => $id
+            'id' => $id, 'sesskey' => sesskey()
     ) ) );
 } else {
-    // ヘッダー出力
+    // Header output.
     echo $OUTPUT->header ();
-    // Replace the following lines with you own code
+    // Replace the following lines with you own code.
     echo $OUTPUT->heading ( get_string ( 'condition1', 'block_hsmail' ) );
     $mform->display ();
     echo $OUTPUT->footer ();

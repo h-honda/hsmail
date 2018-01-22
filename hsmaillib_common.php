@@ -19,35 +19,35 @@ defined ( 'MOODLE_INTERNAL' ) || die ();
 
 class hsmaillib_common {
 
-    // メール送信FROMアドレス
+    // Email transmission FROM address.
     private $mailfrom = '';
     private $mailfromdisp = '';
-    // メール送信のタイトル
+    // Title of mail transmission.
     private $mailsubject = '';
     public function __construct() {
     }
 
     /**
-     * メール送信処理
+     * Mail transmission process
      *
-     * @param string $to 送信先
-     * @param array $from 送信元 array('address'=>送信元アドレス, name => 送信元表示名)
-     * @param string $subject メールタイトル
-     * @param string $body メール本文
-     * @param unknown $attachmentfile 添付ファイル。array('file_name'=>ファイル名, file_body=>ファイル内容の文字列)
+     * @param string $to Destination
+     * @param array $from sender array('address'=>Source address, name => Source display name)
+     * @param string $subject Mail title
+     * @param string $body the content of the email
+     * @param unknown $attachmentfile Attachment.array('file_name'=>file name, file_body=>String of file contents)
      * @return boolean
      */
     public function send_mail($to = null, $from = array(), $subject = null, $body = null, $attachmentfiles = array()) {
-        // メール送信実行
+        // Execute e-mail transmission.
         $mail = get_mailer ();
         mb_language ( 'uni' );
         mb_internal_encoding ( 'UTF-8' );
         $mail->CharSet = 'UTF-8';
 
-        // 送信先の指定がない場合は、デフォルト送信先を使用する
+        // If there is no destination specified, use default destination.
         if ( empty ( $to ) ) {
 
-            // デフォルトの送信先も取得できない場合にはエラー
+            // An error occurs if the default destination can not be obtained.
             if ( ! $to ) {
                 return false;
             }
@@ -55,7 +55,7 @@ class hsmaillib_common {
             $tos = explode ( ',', $to );
         }
 
-        // 送信元。指定がない場合は、デフォルトの送信元を使用
+        // Sender. If not specified, use default source.
         if ( empty ( $from ) ) {
             $from = array (
                     'address' => $this->get_oujadress (),
@@ -67,49 +67,48 @@ class hsmaillib_common {
             $mail->FromName = mb_encode_mimeheader ( $from ['name'] );
         }
 
-        // メールタイトル 。指定がない場合はデフォルトのメールタイトル使用
+        // Mail title. When there is no designation, use default mail title.
         if ( empty ( $subject ) ) {
             $subject = $this->mail_subject;
         }
         $mail->Subject = mb_encode_mimeheader ( $subject );
 
-        // メール本文
+        // The content of the email.
         $mail->Body = $body;
-        // 添付ファイルの指定がある場合には、添付する
+        // If attached file is specified, attach it.
         foreach ($attachmentfiles as $attachmentfile) {
             if (isset ( $attachmentfile ['file_body'] ) && isset ( $attachmentfile ['file_name'] )) {
                 $mimetype = $attachmentfile ['mimetype'];
 
-                $mail->addStringAttachment ( $attachmentfile ['file_body'], mb_encode_mimeheader ( $attachmentfile ['file_name'] ), 'base64', $mimetype );
+                $mail->addStringAttachment ( $attachmentfile ['file_body'],
+                        mb_encode_mimeheader ( $attachmentfile ['file_name'] ), 'base64', $mimetype );
             }
         }
-        // 送信処理
+        // Transmission processing.
         foreach ($tos as $to) {
             $mail->clearAddresses ();
             $mail->AddAddress ( $to );
-            // 送信失敗時にはエラー
-            if ( ! $mail->send () ) {
+            // Error when transmission failed.
                 return false;
-            }
         }
         return true;
     }
 
     /**
-     * システムの　no-replyアドレスの取得
+     * Obtaining the system's no-reply address
      *
      * @return boolean|NULL[]
      */
     private function get_oujadress() {
         global $DB;
-        // 送信情報
+        // Transmission information.
         $to = $DB->get_field ( 'config', 'value', array (
                 'name' => 'noreplyaddress'
         ) );
         if ( $to === false ) {
             return false;
         }
-        // テーブルにアドレス登録がない場合は、エラー
+        // If there is no address registration in the table, an error.
         if ( empty ( $to ) ) {
             return false;
         }

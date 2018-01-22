@@ -29,6 +29,7 @@ if ( $id ) {
     error ( 'Course ID error' );
 }
 
+require_sesskey();
 require_login ( $course );
 
 $context = context_course::instance ( $id );
@@ -36,10 +37,10 @@ if ( !has_capability ( 'block/hsmail:addcondition', $context ) ) {
     throw new moodle_exception ( 'You dont have capability' );
 }
 
-// 削除
+// Delete.
 require_once( 'hsmail_lib.php' );
 $obj = new hsmail_lib ();
 $obj->delete_job ( $jobid );
 redirect ( new moodle_url ( '/blocks/hsmail/jobsetting.php', array (
-        'id' => $id
+        'id' => $id, 'sesskey' => sesskey()
 ) ) );

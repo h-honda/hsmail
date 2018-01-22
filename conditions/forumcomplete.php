@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined('MOODLE_INTERNAL') || die();
-require_once(dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) . '/config.php');
+
 global $CFG;
 require_once($CFG->dirroot . '/blocks/hsmail/hsmailbase.php' );
 require_once($CFG->dirroot . '/lib/completionlib.php' );
@@ -30,7 +30,7 @@ class forumcomplete extends hsmailbase {
         $this->conditionname = 'forumcomplete';
     }
     /**
-     * この条件に一致するユーザ一覧のSQL文を返す
+     * Return the SQL statement of the user list that matches this condition
      *
      * @param unknown $courseid
      * @param unknown $planvalue
@@ -54,7 +54,7 @@ SQL;
             $forumunselectednumber = $forumnumber - $forumselectednumber;
         }
 
-        if ($planvalue [0] == 'c') { // フォーラム完了
+        if ($planvalue [0] == 'c') { // Forum completed.
 
             $sql = <<< SQL
 SELECT cmc.userid FROM {$CFG->prefix}course_modules_completion AS cmc
@@ -73,7 +73,7 @@ WHERE ra.modifierid >0 AND con.instanceid = {$courseid})
 GROUP BY cmc.userid
 HAVING count(cmc.userid) = {$forumselectednumber}
 SQL;
-        } else if ($planvalue [0] == 'i') { // フォーラム未完了
+        } else if ($planvalue [0] == 'i') { // Forum not completed.
 
             if ($forumunselectednumber == 0) {
                 $sql = <<< SQL
@@ -105,7 +105,7 @@ HAVING count(cmc.userid) = {$forumselectednumber}
 )
 SQL;
             }
-        } else { // 設定なし
+        } else { // No setting.
             $sql = <<< SQL
 SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
 SQL;
@@ -114,7 +114,7 @@ SQL;
     }
 
     /**
-     * 設定配列の生成
+     * Generate configuration array
      * {@inheritDoc}
      * @see hsmailbase::make_plan_data()
      */
@@ -139,7 +139,7 @@ SQL;
     }
 
     /**
-     * 個別のエラーチェックをする
+     * Perform an individual error check
      * {@inheritDoc}
      * @see hsmailbase::validation()
      */
@@ -162,14 +162,14 @@ class forumcomplete_form extends moodleform {
     public function definition() {
     }
     /**
-     * 設定画面
+     * Setting screen
      * @param unknown $mform
      * @param unknown $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
         global $CFG, $DB, $COURSE;
 
-        // フォーラム完了ステータス
+        // Fourm completed status.
         $options = array (
                 'a' => '-',
                 'c' => get_string ( 'forumcomplete_c', 'block_hsmail' ),
@@ -194,7 +194,7 @@ class forumcomplete_form extends moodleform {
         }
         $mform->setDefaults ( $defaults );
 
-        // フォーラム名
+        // Forum name.
         $sql = <<< SQL
 SELECT  f.id, f.name FROM {forum} f
 INNER JOIN {course_modules} cm ON cm.instance = f.id AND ( completion = 1 OR completion = 2)
@@ -219,12 +219,12 @@ SQL;
         $mform->setType ( 'forumname', PARAM_TEXT );
 
         if ($defaultdata === null) {
-            // Set default data (if any)
+            // Set default data (if any).
             $defaults = array (
                     'forumname' => 'a'
             );
         } else if (isset ( $defaultdata ['planvalue'] [1] )) {
-            // Edit
+            // Edit.
             $defaults = array (
                     'forumname' => explode ( ',', $defaultdata ['planvalue'] [1] )
             );

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined('MOODLE_INTERNAL') || die();
-require_once( dirname ( dirname ( dirname ( __FILE__ ) ) ) . '/config.php' );
+
 require_once( $CFG->libdir . '/formslib.php' );
 
 class hsmail_form extends moodleform {
@@ -30,7 +30,7 @@ class hsmail_form extends moodleform {
 
         $deleteconfirm = get_string ( 'delete_confirm', 'block_hsmail' );
 
-        // 削除確認JavaScript
+        // Delete confirmation JavaScript.
         $js = <<< JS
 <SCRIPT lang="JavaScript">
 <!--
@@ -47,7 +47,7 @@ JS;
         $obj = new hsmail_lib ();
         $list = $obj->get_job_list ( 0 );
 
-        // 2014-04-18 ページング対応
+        // 2014-04-18 Paging support.
         $paging = $obj->get_paging ( '/blocks/hsmail/jobsetting.php' );
         $mform->addElement ( 'html', $paging );
 
@@ -78,11 +78,13 @@ JS;
         foreach ($list as $tmp) {
             $urldelete = new moodle_url ( '/blocks/hsmail/delete.php', array (
                     'id' => $COURSE->id,
-                    'jobid' => $tmp->id
+                    'jobid' => $tmp->id,
+                    'sesskey' => sesskey()
             ) );
             $urledit = new moodle_url ( '/blocks/hsmail/edit.php', array (
                     'id' => $COURSE->id,
-                    'jobid' => $tmp->id
+                    'jobid' => $tmp->id,
+                    'sesskey' => sesskey()
             ) );
 
             $row = array ();
@@ -103,7 +105,7 @@ JS;
             $actionedit = html_writer::link ( $urledit, get_string ( 'edit' ) ) . ' ';
 
             if ( $tmp->executeflag == 0 ) {
-                $action = $actiondelete . $actionedit; // 未送信
+                $action = $actiondelete . $actionedit; // Unsent.
             } else {
                 $action = '';
             }
@@ -114,11 +116,11 @@ JS;
         $html = html_writer::table ( $table );
         $mform->addElement ( 'html', $html );
 
-        // 2014-04-18 ページング対応
+        // 2014-04-18 Paging support.
         $mform->addElement ( 'html', $paging );
     }
 
-    // Custom validation should be added here
+    // Custom validation should be added here.
     public function validation($data, $files) {
         return array ();
     }
@@ -133,28 +135,30 @@ class hsmail_sent_form extends moodleform {
 
         require_once( $CFG->dirroot . '/blocks/hsmail/hsmail_lib.php' );
         $obj = new hsmail_lib ();
-        $list = $obj->get_job_list ( 2 ); // エラーおよび完了リスト
-                                     // 配信済み
-        $sumi = $obj->get_sent_list ();
-        // 未配信ユーザ
+        $list = $obj->get_job_list ( 2 ); // Error and completion list.
+
+        $sumi = $obj->get_sent_list (); // Delivered.
+        // Undelivered user.
         $misumi = $obj->get_send_list ();
-        // 開始完了
+        // Start completed.
         $time = $obj->get_mail_start_end ();
 
-        // 未配信数計算
+        // Undelivered number calculation.
         $sum = 0;
         while ( list ( $key, $value ) = each ( $misumi ) ) {
             $sum += $value;
         }
         reset ( $misumi );
 
-        // コースの未配信数
+        // Number of undelivered courses.
         $misumicourse = $obj->get_course_send_list ( $COURSE->id );
 
-        $mform->addElement ( 'html', "<div>" . get_string ( 'queue_count', 'block_hsmail', $COURSE->fullname ) . "：{$misumicourse}</div>" );
-        $mform->addElement ( 'html', "<div>" . get_string ( 'queue_count_total', 'block_hsmail' ) . "：{$sum}</div>" );
+        $mform->addElement ( 'html', "<div>" .
+                get_string ( 'queue_count', 'block_hsmail', $COURSE->fullname ) . "：{$misumicourse}</div>" );
+        $mform->addElement ( 'html', "<div>" .
+                get_string ( 'queue_count_total', 'block_hsmail' ) . "：{$sum}</div>" );
 
-        // 2014-04-18 ページング対応
+        // 2014-04-18 Paging support.
         $paging = $obj->get_paging ( '/blocks/hsmail/sentlist.php' );
         $mform->addElement ( 'html', $paging );
 
@@ -205,14 +209,15 @@ class hsmail_sent_form extends moodleform {
             $tmpmisumi = (array_key_exists ( $tmp->id, $misumi )) ? $misumi [$tmp->id] : 0;
             $row [] = ($tmp->executeflag == 2) ? $tmpsumi + $tmpmisumi : 'error';
             $row [] = (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['start'] ) : '';
-            $row [] = (! array_key_exists ( $tmp->id, $misumi )) ? (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['end'] ) : '' : '';
+            $row [] = (! array_key_exists ( $tmp->id, $misumi )) ?
+            (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['end'] ) : '' : '';
 
             $table->data [] = $row;
         }
         $html = html_writer::table ( $table );
         $mform->addElement ( 'html', $html );
 
-        // 2014-04-18 ページング対応
+        // 2014-04-18 Paging support.
         $mform->addElement ( 'html', $paging );
     }
     public function validation($data, $files) {
@@ -230,9 +235,9 @@ class hsmail_maillist_form extends moodleform {
 
         require_once( $CFG->dirroot . '/blocks/hsmail/hsmail_lib.php' );
         $obj = new hsmail_lib ();
-        $list = $obj->get_mail_list (); // メールリスト
+        $list = $obj->get_mail_list (); // Mail list.
 
-        // 2014-04-18 ページング対応
+        // 2014-04-18 Paging support.
         $paging = $obj->get_paging ( '/blocks/hsmail/maillist.php' );
         $mform->addElement ( 'html', $paging );
 
@@ -245,17 +250,18 @@ class hsmail_maillist_form extends moodleform {
         $table->head [] = get_string ( 'assignment', 'block_hsmail' );
         $table->colclasses [] = 'leftalign';
 
-        // $table->head[] = get_string('head_user', 'block_hsmail');
-        // $table->colclasses[] = 'leftalign';
-
         $table->head [] = get_string ( 'head_mail', 'block_hsmail' );
         $table->colclasses [] = 'leftalign';
 
         foreach ($list as $tmp) {
             $row = array ();
             $row [] = date ( 'Y/m/d H:i', $tmp->timecreated );
-            // $row[] = $tmp->lastname.' '.$tmp->firstname;
-            $url = new moodle_url ( "/blocks/hsmail/maildetail.php?id={$COURSE->id}&mailid={$tmp->hsmail}&page={$obj->page}" );
+            $url = new moodle_url ( '/blocks/hsmail/maildetail.php', array(
+                    'id' => $COURSE->id,
+                    'mailid' => $tmp->hsmail,
+                    'page' => $obj->page,
+                    'sesskey' => sesskey()
+                    ));
             $link = html_writer::link ( $url, $tmp->mailtitle );
             $row [] = $link;
             $table->data [] = $row;
@@ -263,7 +269,7 @@ class hsmail_maillist_form extends moodleform {
         $html = html_writer::table ( $table );
         $mform->addElement ( 'html', $html );
 
-        // 2014-04-18 ページング対応
+        // 2014-04-18 Paging support.
         $mform->addElement ( 'html', $paging );
     }
     public function validation($data, $files) {
@@ -280,17 +286,20 @@ class hsmail_maildetail_form extends moodleform {
 
         require_once( $CFG->dirroot . '/blocks/hsmail/hsmail_lib.php' );
         $obj = new hsmail_lib ();
-        $maildetail = $obj->get_mail_detail (); // メール詳細
+        $maildetail = $obj->get_mail_detail (); // Mail details.
 
-        $mform->addElement ( 'static', 'maildate', get_string ( 'assignment', 'block_hsmail' ), date ( 'Y/m/d H:i', $maildetail->timecreated ) );
-        $mform->addElement ( 'static', 'mailtitle', get_string ( 'head_mail', 'block_hsmail' ), htmlspecialchars ( $maildetail->mailtitle ) );
-        $mform->addElement ( 'static', 'mailbody', get_string ( 'mailbody', 'block_hsmail' ), nl2br ( htmlspecialchars ( $this->conv_placeholder ( $maildetail->mailbody ) ) ) );
+        $mform->addElement ( 'static', 'maildate', get_string ( 'assignment', 'block_hsmail' ),
+                date ( 'Y/m/d H:i', $maildetail->timecreated ) );
+        $mform->addElement ( 'static', 'mailtitle', get_string ( 'head_mail', 'block_hsmail' ),
+                htmlspecialchars ( $maildetail->mailtitle ) );
+        $mform->addElement ( 'static', 'mailbody', get_string ( 'mailbody', 'block_hsmail' ),
+                nl2br ( htmlspecialchars ( $this->conv_placeholder ( $maildetail->mailbody ) ) ) );
     }
     public function validation($data, $files) {
         return array ();
     }
 
-    // プレースフォルダ処理
+    // Place folder processing.
     public function conv_placeholder($body) {
         global $COURSE, $USER;
 

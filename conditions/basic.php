@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined ( 'MOODLE_INTERNAL' ) || die ();
-require_once( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) . '/config.php' );
 global $CFG;
 require_once( $CFG->dirroot . '/blocks/hsmail/hsmailbase.php' );
+
 /**
  *
  * @author h-honda
@@ -29,7 +29,7 @@ class basic extends hsmailbase {
         $this->conditionname = 'basic';
     }
     /**
-     * この条件に一致するユーザ一覧のSQL文を返す
+     * Return the SQL statement of the user list that matches this condition.
      *
      * @param unknown $courseid
      * @param unknown $planvalue
@@ -44,7 +44,7 @@ SQL;
         return $sql;
     }
 
-    // 設定配列の生成
+    // Generate configuration array.
     /**
      *
      * {@inheritDoc}
@@ -56,7 +56,7 @@ SQL;
         );
     }
 
-    // 設定値を取得する
+    // Acquire setting value.
     /**
      *
      * {@inheritDoc}
@@ -88,7 +88,7 @@ class basic_form extends moodleform {
     public function definition() {
     }
     /**
-     * 設定画面
+     * Setting screen.
      * @param unknown $mform
      * @param unknown $defaultdata
      */
@@ -97,6 +97,7 @@ class basic_form extends moodleform {
 
         $mform->addElement ( 'hidden', 'id', $COURSE->id );
         $mform->addElement ( 'hidden', 'jobid', '0' );
+        $mform->addElement ( 'hidden', 'sesskey', sesskey());
 
         $mform->addElement ( 'text', 'condition_title', get_string ( 'head_title', 'block_hsmail' ), array (
                 'size' => '40'
@@ -106,7 +107,8 @@ class basic_form extends moodleform {
         $mform->addElement ( 'text', 'mail_title', get_string ( 'head_mail', 'block_hsmail' ), array (
                 'size' => '40'
         ) );
-        $mform->addElement ( 'textarea', 'mailbody', get_string ( 'mailbody', 'block_hsmail' ), 'wrap="virtual" rows="20" cols="50"' );
+        $mform->addElement ( 'textarea', 'mailbody', get_string ( 'mailbody', 'block_hsmail' ),
+                'wrap="virtual" rows="20" cols="50"' );
         $mform->addHelpButton ( 'mailbody', 'mailbody', 'block_hsmail' );
 
         $mform->addElement ( 'header', 'detail_condition', get_string ( 'detail_condition', 'block_hsmail' ) );
@@ -115,7 +117,9 @@ class basic_form extends moodleform {
         $mform->addElement ( 'hidden', 'repeatinterval', '0' );
 
         $mform->addElement ( 'date_time_selector', 'datetime', get_string ( 'date_time_selector', 'block_hsmail' ) );
-        $mform->addElement ( 'checkbox', 'instantly', '', get_string ( 'instantly', 'block_hsmail' ) ); // 2014-06-04 即時配信
+        // 2014-06-04 Immediate delivery.
+        $mform->addElement ( 'checkbox', 'instantly', '', get_string ( 'instantly', 'block_hsmail' ) );
+
         $mform->disabledIf ( 'datetime', 'instantly', 'checked' );
 
         $mform->setExpanded ( 'detail_condition' );
@@ -123,7 +127,6 @@ class basic_form extends moodleform {
         $mform->addRule ( 'condition_title', get_string ( 'required' ), 'required', '', 'client' );
         $mform->addRule ( 'mail_title', get_string ( 'required' ), 'required', '', 'client' );
         $mform->addRule ( 'mailbody', get_string ( 'required' ), 'required', '', 'client' );
-        // $mform->addRule('datetime', get_string('required'),'required','', 'client');
 
         $mform->setType ( 'id', PARAM_INT );
         $mform->setType ( 'jobid', PARAM_INT );
@@ -134,7 +137,7 @@ class basic_form extends moodleform {
         $mform->setType ( 'mailbody', PARAM_TEXT );
         $mform->setType ( 'instantly', PARAM_INT );
 
-        // Set default data (if any)
+        // Set default data (if any).
         $defaults = array (
                 'condition_title' => '',
                 'timing' => 0,
@@ -145,7 +148,7 @@ class basic_form extends moodleform {
                 'instantly' => '0'
         );
         if ( $defaultdata !== null ) {
-            // 既存データをデフォルト値にする
+            // Make existing data the default value.
             $defaults = array (
                     'jobid' => $defaultdata ['id'],
                     'condition_title' => $defaultdata ['jobtitle'],

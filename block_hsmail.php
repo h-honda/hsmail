@@ -28,7 +28,7 @@ class block_hsmail extends block_base {
         $this->title = get_string ( 'pluginname', 'block_hsmail' );
     }
 
-    // ブロックの設置場所の有効範囲
+    // Effective range of block installation location.
     public function applicable_formats() {
         return array (
                 'site-index' => true,
@@ -56,14 +56,14 @@ SQL;
             $context = context_course::instance ( $COURSE->id );
             if ( has_capability ( 'block/hsmail:addcondition', $context ) ) {
                 $this->content->text = $text;
-                $url = new moodle_url ( '/blocks/hsmail/add.php?id=' . $COURSE->id );
+                $url = new moodle_url ( '/blocks/hsmail/add.php', array('id' => $COURSE->id, 'sesskey' => sesskey()) );
                 $link = html_writer::link ( $url, get_string ( 'add', 'block_hsmail' ) );
                 $this->content->text = $link . '<br />';
-                $url = new moodle_url ( '/blocks/hsmail/jobsetting.php?id=' . $COURSE->id );
+                $url = new moodle_url ( '/blocks/hsmail/jobsetting.php', array('id' => $COURSE->id, 'sesskey' => sesskey()) );
                 $link = html_writer::link ( $url, get_string ( 'confirm', 'block_hsmail' ) );
                 $this->content->text .= $link;
             } else if ( has_capability ( 'block/hsmail:viewmaillist', $context ) ) {
-                $url = new moodle_url ( '/blocks/hsmail/maillist.php?id=' . $COURSE->id );
+                $url = new moodle_url ( '/blocks/hsmail/maillist.php', array('id' => $COURSE->id, 'sesskey' => sesskey()) );
                 $link = html_writer::link ( $url, get_string ( 'sentlist', 'block_hsmail' ) );
                 $this->content->text = $link;
             }
@@ -73,7 +73,7 @@ SQL;
         return $this->content;
     }
 
-    // 個別設定有効
+    // Individual setting valid.
     public function instance_allow_multiple() {
         return false;
     }
@@ -81,25 +81,25 @@ SQL;
         return true;
     }
 
-    // 全体設定有効
+    // Overall setting valid.
     public function has_config() {
         return true;
     }
 
-    // メールキュー登録および送信
+    // Mail queue registration and transmission.
     public function cron() {
         global $DB, $CFG, $USER, $COURSE;
 
         echo "start\n";
         require_once( $CFG->dirroot . '/blocks/hsmail/hsmail_lib.php' );
-        // hsmaillib object 作成
+        // Generate hsmaillib object.
         $objhsmaillib = new hsmail_lib ();
         mtrace ( "hsmail target user listing..." );
-        // fromアドレスの取得
+        // Get from address.
         $mailfrom = get_config('core', 'supportemail');
 
         $now = date ( 'U' );
-        // 条件の取得
+        // Get conditions.
         $sql = <<< SQL
 SELECT * FROM {$CFG->prefix}block_hsmail
 WHERE executeflag = 0 AND (executedatetime <= {$now} OR instantly = 1)
@@ -108,27 +108,27 @@ SQL;
         $course = $DB->get_records_sql ( $sql );
 
         reset ( $course );
-        // 作業テーブルの削除
+        // Delete working table.
         $DB->delete_records ( 'block_hsmail_temp' );
         $addnum = 0;
         while ( list ( $key, $value ) = each ( $course ) ) {
 
-            // ジョブのステータス変更 実行中：2に変更
+            // Job status change in progress: changed to 2.
             $dataobject = new stdClass ();
             $dataobject->id = $value->id;
-            $dataobject->executeflag = 2; // キューにたまった時点で編集・削除不可とする
+            $dataobject->executeflag = 2; // When editing / deletion is not possible at the time of accumulation in the queue.
             $DB->update_record ( 'block_hsmail', $dataobject );
 
-            // トランザクション　ここから
+            // Transaction from here.
             $transaction = null;
             try {
                 $transaction = $DB->start_delegated_transaction ();
 
-                // 作業テーブルの削除
+                // Delete working table.
                 $DB->delete_records ( 'block_hsmail_temp' );
                 if ( $value->course == 1 ) {
-                    // サイトトップで設定された場合
-                    $admins = get_admins (); // サイトアドミンを取得
+                    // When set at the site top.
+                    $admins = get_admins (); // get site admin.
                     $tmpadmins = array ();
                     foreach ($admins as $admin) {
                         $tmpadmins [] = $admin->id;
@@ -143,7 +143,7 @@ ORDER BY u.id
 )
 SQL;
                 } else {
-                    // 作業テーブルのへ受講者を登録(学生ロール)
+                    // Register students to work table (student roll).
                     $sql = <<< SQL
 INSERT INTO {$CFG->prefix}block_hsmail_temp
 (
@@ -159,24 +159,24 @@ SQL;
                         $value->course
                 ) );
 
-                // 該当コースの条件一覧を取得
+                // Get a list of conditions of the relevant course.
                 $plan = $DB->get_records ( 'block_hsmail_plan', array (
                         'hsmail' => $value->id
                 ) );
 
                 foreach ($plan as $tmp) {
-                    // コース受講者一覧の作成
+                    // Creating list of course participants.
                     foreach ($objhsmaillib->conditionfiles as $cf) {
                         if ( $tmp->plan != $cf ) {
                             continue;
                         }
                         require_once($CFG->dirroot . '/blocks/hsmail/conditions/' . $cf . '.php');
                         $objwork = new $cf ();
-                        // 条件にあうユーザ取得SQLの生成
+                        // Generate user acquisition SQL meeting conditions.
                         $planvalue = unserialize ( base64_decode ( $tmp->planvalue ) );
                         $tmpsql = $objwork->regist_users_sql ( $value->course, $planvalue );
 
-                        // 条件に一致するユーザへの絞込
+                        // Refine to users who match the conditions.
                         try {
                             $tmpuser = $DB->get_records_sql ( $tmpsql );
 
@@ -206,13 +206,13 @@ SQL;
                     }
                 }
 
-                // フッターを追加
+                // Add footer.
                 $config = get_config ( 'block_hsmail' );
                 if ( $config->footer != '' ) {
                     $value->mailbody .= "\n\r" . $config->footer;
                 }
 
-                // 条件に合ったユーザをキューに登録
+                // Queued users who meet the conditions.
                 $sql = <<< SQL
 INSERT INTO {$CFG->prefix}block_hsmail_queue
 (hsmail, userid, timesend, title, body, mailfrom, mailto,timecreated, timemodified, instantly)
@@ -236,25 +236,25 @@ SQL;
                 ) );
                 $dataobject = null;
 
-                // 追加するメールの件数の取得
+                // Retrieve the number of e-mails to be added.
                 $addnum += $DB->count_records( 'block_hsmail_temp' );
 
                 $transaction->allow_commit ();
 
             } catch ( Exception $e ) {
-                // ジョブのステータス変更 実行中：0に変更
+                // Job status change in progress: changed to 0.
                 $dataobject = new stdClass ();
                 $dataobject->id = $value->id;
-                $dataobject->executeflag = 1; // 失敗状態とする
+                $dataobject->executeflag = 1; // Make it in failure state.
                 $DB->update_record ( 'block_hsmail', $dataobject );
-                // Rollback
+                // Rollback.
                 $transaction->rollback ( $e );
             }
         }
 
-        // メール登録ログ
+        // Mail registration log.
         if ( $addnum != 0 ) {
-            // メールがキューに登録された時のみログへ出力
+            // Output to log only when mail is registered in queue.
             $event = \block_hsmail\event\mail_added::create(array(
                     'context' => context_course::instance($COURSE->id),
                     'userid' => $USER->id,
@@ -263,7 +263,7 @@ SQL;
             ));
             $event->trigger();
         }
-        // 作業テーブルの削除
+        // Delete working table.
         $DB->delete_records ( 'block_hsmail_temp' );
 
         mtrace ( 'hsmail sending mail ... ' );
@@ -273,25 +273,25 @@ SQL;
             require_once( 'hsmaillib_wrapper.php' );
             $mailobj = new hsmaillib_wrapper ();
 
-            // トランザクション
+            // Transaction.
             $transaction = $DB->start_delegated_transaction ();
-            // 一度に送るユーザ数を取得
+            // Get number of users sent at once.
             $config = get_config ( 'block_hsmail' );
-            $mailmax = (int)($config->mailmax); // 同時メール送信数
-            $ignoremailmax = $config->ignore_mailmax; // 即時配信時に同時メール送信数を無視
+            $mailmax = (int)($config->mailmax); // Number of simultaneous mail transmission.
+            $ignoremailmax = $config->ignore_mailmax; // Ignore the number of simultaneous mail transmission at immediate delivery.
 
-            // 即時配信時に同時メール送信数を無視 ON
+            // Ignore the number of simultaneous mail transmissions at immediate delivery ON.
             if ( $ignoremailmax == 1 ) {
-                // 即時配信メール
+                // Instant delivery email.
                 $sql = "SELECT * FROM {$CFG->prefix}block_hsmail_queue WHERE instantly=1";
                 $tagetmailsinstantly = $DB->get_records_sql ( $sql );
 
-                // キューからメールの削除
+                // Delete mail from queue.
                 $sql = "DELETE FROM {$CFG->prefix}block_hsmail_queue WHERE instantly=1";
                 $DB->execute ( $sql, array () );
 
-                // 通常メール
-                // 指定数分のキューの取得
+                // Regular mail.
+                // Retrieve the specified number of queues.
                 $now = (int)(date ( 'U' ));
                 $sql = <<< SQL
 SELECT * FROM {$CFG->prefix}block_hsmail_queue
@@ -301,16 +301,16 @@ ORDER BY id ASC
 SQL;
                 $tagetmails = $DB->get_records_sql ( $sql, array ( $now ), 0, $mailmax );
 
-                // キューからメールの削除
+                // Delete mail from queue.
                 reset( $tagetmails );
                 while ( list ( $key3, $value3 ) = each ( $tagetmails )) {
                     $DB->delete_records( 'block_hsmail_queue', array ( 'id' => $value3->id ) );
                 }
 
-                $tagetmails = array_merge ( $tagetmailsinstantly, $tagetmails ); // 即時配信メールと通常メールマージ
-                // 即時配信時に同時メール送信数を無視 OFF
+                $tagetmails = array_merge ( $tagetmailsinstantly, $tagetmails ); // Immediate delivery mail and regular mail merge.
+                // Ignore the number of simultaneous mail transmissions at immediate delivery OFF.
             } else {
-                // 指定数分のキューの取得
+                // Retrieve the specified number of queues.
                 $now = (int)(date ( 'U' ));
                 $sql = <<< SQL
 SELECT * FROM {$CFG->prefix}block_hsmail_queue
@@ -320,7 +320,7 @@ ORDER BY instantly DESC, id ASC
 SQL;
                 $tagetmails = $DB->get_records_sql ( $sql, array ( $now ), 0, $mailmax );
 
-                // キューからメールの削除
+                // Delete mail from queue.
                 reset( $tagetmails );
                 while ( list ( $key4, $value4 ) = each ( $tagetmails )) {
                     $DB->delete_records( 'block_hsmail_queue', array ( 'id' => $value4->id ) );
@@ -329,32 +329,32 @@ SQL;
 
             if ( count ( $tagetmails ) == 0 ) {
                 $transaction->allow_commit ();
-                return true; // 送信メールがない場合処理を終了
+                return true; // When there is no outgoing e-mail End processing.
             }
-            // 送信処理
+            // Transmission processing.
             $sentmail = 0;
             reset ( $tagetmails );
             while ( list ( $key, $value ) = each ( $tagetmails ) ) {
-                // メール生成
+                // Mail generation.
                 $recipients = $value->mailto;
-                // メール送信者表示名
+                // Email sender display name.
                 $headers ['FromName'] = '';
                 $headers ['From'] = $value->mailfrom;
                 $headers ['To'] = $value->mailto;
                 $headers ['Subject'] = $value->title;
 
-                // プレースフォルダ処理
+                // Place folder processing.
                 $body = $this->conv_placeholder ( $value );
-                // 送信
+                // Send.
                 $mailobj->send ( $recipients, $headers, $body );
                 $sentmail++;
 
-                // 送信ログの登録
+                // Create transmission log.
                 $retlogid = $DB->get_record ( 'block_hsmail_log', array (
                         'hsmail' => $value->hsmail
                 ) );
                 if ( $retlogid === false ) {
-                    // ログテーブルへ追加
+                    // Add to log table.
                     $dataobject = new stdClass ();
                     $dataobject->hsmail = $value->hsmail;
                     $dataobject->timecreated = $now;
@@ -375,10 +375,10 @@ SQL;
             }
             mtrace ( 'hsmail sent mail ' );
 
-            // コミット
+            // Commit.
             $transaction->allow_commit ();
             mtrace ( 'hsmail processing end.' );
-            // ログに記録
+            // Logging.
             $event = \block_hsmail\event\mail_sent::create(array(
                     'context' => context_course::instance($COURSE->id),
                     'userid' => $USER->id,
@@ -394,20 +394,20 @@ SQL;
         return true;
     }
 
-    // プレースフォルダ処理
+    // Place folder processing.
     public function conv_placeholder($value) {
         global $DB, $CFG;
 
         $body = $value->body;
 
-        // ユーザ氏名
+        // User name.
         $sql = "SELECT firstname, lastname FROM {$CFG->prefix}user WHERE id=?";
         $userinfo = $DB->get_record_sql ( $sql, array (
                 $value->userid
         ) );
         $body = str_replace ( '[[user_name]]', "{$userinfo->lastname} {$userinfo->firstname}", $body );
 
-        // コース名＋URL
+        // Course name + URL.
         $sql = <<< SQL
 SELECT T2.id, T2.fullname FROM {block_hsmail} AS T1
 INNER JOIN {course} AS T2 ON T1.course=T2.id WHERE T1.id=?
