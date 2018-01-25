@@ -23,12 +23,24 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once( $CFG->dirroot.'/blocks/moodleblock.class.php' );
 
+/**
+ *
+ * @author h-honda
+ *
+ */
 class block_hsmail extends block_base {
+    /**
+     * init function
+     */
     public function init() {
         $this->title = get_string ( 'pluginname', 'block_hsmail' );
     }
 
-    // Effective range of block installation location.
+    /**
+     * Effective range of block installation location.
+     * {@inheritDoc}
+     * @see block_base::applicable_formats()
+     */
     public function applicable_formats() {
         return array (
                 'site-index' => true,
@@ -36,6 +48,12 @@ class block_hsmail extends block_base {
                 'course-view-social' => false
         );
     }
+
+    /**
+     * Get Content
+     * {@inheritDoc}
+     * @see block_base::get_content()
+     */
     public function get_content() {
         global $CFG, $COURSE, $USER, $DB;
 
@@ -49,7 +67,7 @@ class block_hsmail extends block_base {
 
         if ( $USER->id != 0 ) {
             $sql = <<< SQL
-SELECT count(*) FROM {$CFG->prefix}block_hsmail
+SELECT count(*) FROM {block_hsmail}
 WHERE
 executeflag <= ?
 SQL;
@@ -73,20 +91,37 @@ SQL;
         return $this->content;
     }
 
-    // Individual setting valid.
+    /**
+     * Individual setting valid.
+     * {@inheritDoc}
+     * @see block_base::instance_allow_multiple()
+     */
     public function instance_allow_multiple() {
         return false;
     }
+    /**
+     * Enable settings for each instance
+     * {@inheritDoc}
+     * @see block_base::instance_allow_config()
+     */
     public function instance_allow_config() {
         return true;
     }
 
-    // Overall setting valid.
+    /**
+     * Overall setting valid.
+     * {@inheritDoc}
+     * @see block_base::has_config()
+     */
     public function has_config() {
         return true;
     }
 
-    // Mail queue registration and transmission.
+    /**
+     * Mail queue registration and transmission.
+     * @throws moodle_exception
+     * @return boolean
+     */
     public function cron() {
         global $DB, $CFG, $USER, $COURSE;
 
@@ -101,7 +136,7 @@ SQL;
         $now = date ( 'U' );
         // Get conditions.
         $sql = <<< SQL
-SELECT * FROM {$CFG->prefix}block_hsmail
+SELECT * FROM {block_hsmail}
 WHERE executeflag = 0 AND (executedatetime <= {$now} OR instantly = 1)
 ORDER BY instantly DESC, executedatetime ASC
 SQL;
@@ -135,9 +170,9 @@ SQL;
                     }
                     $admins = implode ( ',', $tmpadmins );
                     $sql = <<< SQL
-INSERT INTO {$CFG->prefix}block_hsmail_temp
+INSERT INTO {block_hsmail_temp}
 (
-SELECT u.id AS userid, u.email, u.firstname, u.lastname FROM {$CFG->prefix}user As u
+SELECT u.id AS userid, u.email, u.firstname, u.lastname FROM {user} As u
 WHERE u.id != 1 AND u.id NOT IN ({$admins}) AND u.deleted=0
 ORDER BY u.id
 )
@@ -145,11 +180,11 @@ SQL;
                 } else {
                     // Register students to work table (student roll).
                     $sql = <<< SQL
-INSERT INTO {$CFG->prefix}block_hsmail_temp
+INSERT INTO {block_hsmail_temp}
 (
-SELECT u.id AS userid, u.email, u.firstname, u.lastname, u.alternatename, u.middlename FROM {$CFG->prefix}role_assignments AS ra
-INNER JOIN {$CFG->prefix}context AS c ON ra.contextid = c.id AND contextlevel = 50 AND instanceid = ?
-INNER JOIN {$CFG->prefix}user AS u ON ra.userid = u.id
+SELECT u.id AS userid, u.email, u.firstname, u.lastname, u.alternatename, u.middlename FROM {role_assignments} AS ra
+INNER JOIN {context} AS c ON ra.contextid = c.id AND contextlevel = 50 AND instanceid = ?
+INNER JOIN {user} AS u ON ra.userid = u.id
 WHERE ra.roleid = 5
 )
 SQL;
@@ -189,13 +224,13 @@ SQL;
 
                             if ( $ids == "" ) {
                                 $sql = <<< SQL
-DELETE FROM {$CFG->prefix}block_hsmail_temp
+DELETE FROM {block_hsmail_temp}
 SQL;
                                 $DB->execute( $sql );
                                 break 2;
                             } else {
                                 $sql = <<< SQL
-DELETE FROM {$CFG->prefix}block_hsmail_temp WHERE userid NOT IN ({$ids})
+DELETE FROM {block_hsmail_temp} WHERE userid NOT IN ({$ids})
 SQL;
                                 $DB->execute( $sql );
                             }
@@ -214,7 +249,7 @@ SQL;
 
                 // Queued users who meet the conditions.
                 $sql = <<< SQL
-INSERT INTO {$CFG->prefix}block_hsmail_queue
+INSERT INTO {block_hsmail_queue}
 (hsmail, userid, timesend, title, body, mailfrom, mailto,timecreated, timemodified, instantly)
 (SELECT
 '{$value->id}' AS hsmail,
@@ -227,7 +262,7 @@ email AS mailto,
 '{$now}' AS timecreated,
 '{$now}' AS timemodified,
 '{$value->instantly}'AS instantly
-FROM {$CFG->prefix}block_hsmail_temp)
+FROM {block_hsmail_temp})
 SQL;
                 $DB->execute ( $sql, array (
                         $value->mailtitle,
@@ -283,18 +318,18 @@ SQL;
             // Ignore the number of simultaneous mail transmissions at immediate delivery ON.
             if ( $ignoremailmax == 1 ) {
                 // Instant delivery email.
-                $sql = "SELECT * FROM {$CFG->prefix}block_hsmail_queue WHERE instantly=1";
+                $sql = "SELECT * FROM {block_hsmail_queue} WHERE instantly=1";
                 $tagetmailsinstantly = $DB->get_records_sql ( $sql );
 
                 // Delete mail from queue.
-                $sql = "DELETE FROM {$CFG->prefix}block_hsmail_queue WHERE instantly=1";
+                $sql = "DELETE FROM {block_hsmail_queue} WHERE instantly=1";
                 $DB->execute ( $sql, array () );
 
                 // Regular mail.
                 // Retrieve the specified number of queues.
                 $now = (int)(date ( 'U' ));
                 $sql = <<< SQL
-SELECT * FROM {$CFG->prefix}block_hsmail_queue
+SELECT * FROM {block_hsmail_queue}
 WHERE
 timesend <= ? AND instantly = 0
 ORDER BY id ASC
@@ -313,7 +348,7 @@ SQL;
                 // Retrieve the specified number of queues.
                 $now = (int)(date ( 'U' ));
                 $sql = <<< SQL
-SELECT * FROM {$CFG->prefix}block_hsmail_queue
+SELECT * FROM {block_hsmail_queue}
 WHERE
 timesend <= ? OR instantly = 1
 ORDER BY instantly DESC, id ASC
@@ -394,14 +429,18 @@ SQL;
         return true;
     }
 
-    // Place folder processing.
+    /**
+     * Place folder processing.
+     * @param unknown $value
+     * @return mixed
+     */
     public function conv_placeholder($value) {
         global $DB, $CFG;
 
         $body = $value->body;
 
         // User name.
-        $sql = "SELECT firstname, lastname FROM {$CFG->prefix}user WHERE id=?";
+        $sql = "SELECT firstname, lastname FROM {user} WHERE id=?";
         $userinfo = $DB->get_record_sql ( $sql, array (
                 $value->userid
         ) );

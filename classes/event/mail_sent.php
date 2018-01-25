@@ -14,19 +14,43 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ *
+ * @package block_hsmail
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ */
 namespace block_hsmail\event;
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ *
+ * @author h-honda
+ *
+ */
 class mail_sent extends \core\event\base {
+    /**
+     * init
+     * {@inheritDoc}
+     * @see \core\event\base::init()
+     */
     protected function init() {
         $this->data['crud'] = 'r'; // Only the following characters, c(reate), r(ead), u(pdate), d(elete).
         $this->data['edulevel'] = self::LEVEL_OTHER;
     }
 
+    /**
+     * Get block name
+     * @return string
+     */
     public static function get_name() {
         return get_string('event_mail_sent_desc', 'block_hsmail');
     }
 
+    /**
+     * Get Description
+     * {@inheritDoc}
+     * @see \core\event\base::get_description()
+     */
     public function get_description() {
         return  get_string('event_mail_sent', 'block_hsmail', $this->other['sentmail']);
     }

@@ -41,18 +41,18 @@ class complete extends hsmailbase {
 
         if ( $planvalue == 'c' ) { // Course completed.
             $sql = <<< SQL
-SELECT userid FROM {$CFG->prefix}course_completions WHERE course={$courseid} AND timecompleted>0
+SELECT userid FROM {course_completions} WHERE course={$courseid} AND timecompleted>0
 SQL;
         } else if ( $planvalue == 'i' ) { // Course not completed.
             $sql = <<< SQL
-SELECT userid FROM {$CFG->prefix}block_hsmail_temp
+SELECT userid FROM {block_hsmail_temp}
 WHERE userid NOT IN
-(SELECT userid FROM {$CFG->prefix}course_completions
+(SELECT userid FROM {course_completions}
 WHERE course={$courseid} AND timecompleted>0)
 SQL;
         } else { // No setting.
             $sql = <<< SQL
-SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
+SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
 SQL;
         }
 

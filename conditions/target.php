@@ -40,21 +40,21 @@ class target extends hsmailbase {
 
         if ($planvalue == 'a') { // Site user.
             $sql = <<< SQL
-SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
+SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
 SQL;
         } else if ($planvalue == 'c') { // Course participants.
             $sql = <<< SQL
-SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
+SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
 SQL;
         } else if (substr ( $planvalue, 0, 1 ) == 'g') { // Group.
             $groupid = ( int ) substr ( $planvalue, 1 );
             $sql = <<< SQL
-SELECT userid FROM {$CFG->prefix}groups_members WHERE groupid={$groupid}
+SELECT userid FROM {groups_members} WHERE groupid={$groupid}
 SQL;
         } else {
             // Cohort.
             $sql = <<< SQL
-SELECT userid FROM {$CFG->prefix}cohort_members AS cm
+SELECT userid FROM {cohort_members} AS cm
 WHERE cm.cohortid = {$planvalue}
 SQL;
         }

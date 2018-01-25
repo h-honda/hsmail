@@ -39,7 +39,7 @@ class basic extends hsmailbase {
         global $DB, $CFG;
 
         $sql = <<< SQL
-SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
+SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
 SQL;
         return $sql;
     }

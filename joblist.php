@@ -39,8 +39,6 @@ if ( !has_capability ( 'block/hsmail:addcondition', $context ) ) {
 }
 
 // Display processing.
-$PAGE->requires->js ( new moodle_url ( '/blocks/hsmail/jobs.js' ) );
-
 $PAGE->set_url ( '/blocks/hsmail/jobsetting.php', array (
         'id' => $id,
         'sesskey' => sesskey()

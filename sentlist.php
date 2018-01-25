@@ -36,8 +36,6 @@ if ( ! has_capability ( 'block/hsmail:addcondition', $context ) ) {
     throw new moodle_exception ( 'You dont have capability' );
 }
 // Display processing.
-$PAGE->requires->js ( new moodle_url ( '/blocks/hsmail/jobs.js' ) );
-
 $PAGE->set_url ( '/blocks/hsmail/sentlist.php', array (
         'id' => $id,
         'sesskey' => sesskey()

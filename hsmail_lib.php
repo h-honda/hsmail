@@ -332,8 +332,8 @@ class hsmail_lib {
         // Total number acquisition.
         $sql = <<< SQL
 SELECT COUNT(*) AS cnt
-FROM {$CFG->prefix}block_hsmail AS bh
-INNER JOIN {$CFG->prefix}user AS u ON bh.createuser = u.id
+FROM {block_hsmail} AS bh
+INNER JOIN {user} AS u ON bh.createuser = u.id
 WHERE bh.course = ? AND bh.category = ? AND executeflag <= ? {$reservation}
 SQL;
         $datacount = $DB->get_record_sql ( $sql, array (
@@ -346,7 +346,7 @@ SQL;
         $context = context_course::instance ( $COURSE->id );
 
         // Acquire number of items per page.
-        $sql = "SELECT configdata FROM {$CFG->prefix}block_instances WHERE blockname='hsmail' AND parentcontextid=?";
+        $sql = "SELECT configdata FROM {block_instances} WHERE blockname='hsmail' AND parentcontextid=?";
         $blockconfigdata = $DB->get_record_sql ( $sql, array (
                 $context->id
         ) );
@@ -390,8 +390,8 @@ SQL;
 select bh.id, bh.course, bh.category, bh.executedatetime,
 bh.jobtitle,bh.mailtitle,bh.executeflag, bh.timecreated,
 bh.createuser, bh.instantly, u.lastname, u.firstname
-FROM {$CFG->prefix}block_hsmail AS bh
-INNER JOIN {$CFG->prefix}user AS u ON bh.createuser = u.id
+FROM {block_hsmail} AS bh
+INNER JOIN {user} AS u ON bh.createuser = u.id
 WHERE bh.course = ? AND bh.category = ? AND executeflag <= ? {$reservation}
 ORDER BY {$orderinstantly} bh.executedatetime {$sortorder}
 SQL;
@@ -408,7 +408,7 @@ SQL;
     public function get_sent_list() {
         global $DB, $CFG;
         $sql = <<< SQL
-SELECT hsmail,count(*) AS c FROM {$CFG->prefix}block_hsmail_userlog GROUP BY hsmail ORDER BY hsmail DESC
+SELECT hsmail,count(*) AS c FROM {block_hsmail_userlog} GROUP BY hsmail ORDER BY hsmail DESC
 SQL;
         $ret = $DB->get_records_sql ( $sql );
 
@@ -423,7 +423,7 @@ SQL;
         global $DB, $CFG;
         // Retrieve the number of remaining mails from the queue.
         $sql = <<< SQL
-SELECT hsmail,count(*) AS c FROM {$CFG->prefix}block_hsmail_queue
+SELECT hsmail,count(*) AS c FROM {block_hsmail_queue}
 GROUP BY hsmail
 SQL;
         $ret = $DB->get_records_sql ( $sql );
@@ -439,8 +439,8 @@ SQL;
         global $DB, $CFG;
         // Retrieve the number of remaining mails from the queue.
         $sql = <<< SQL
-SELECT count(*) AS cnt FROM {$CFG->prefix}block_hsmail_queue AS T1
-INNER JOIN {$CFG->prefix}block_hsmail AS T2 ON T1.hsmail=T2.id WHERE T2.course=?;
+SELECT count(*) AS cnt FROM {block_hsmail_queue} AS T1
+INNER JOIN {block_hsmail} AS T2 ON T1.hsmail=T2.id WHERE T2.course=?;
 SQL;
         $ret = $DB->get_record_sql ( $sql, array (
                 $courseid
@@ -457,7 +457,7 @@ SQL;
     public function get_mail_start_end() {
         global $DB, $CFG;
         $sql = <<< SQL
-SELECT hsmail,min(timecreated) AS min, max(timecreated) AS max FROM {$CFG->prefix}block_hsmail_userlog
+SELECT hsmail,min(timecreated) AS min, max(timecreated) AS max FROM {block_hsmail_userlog}
 GROUP BY hsmail
 ORDER BY hsmail DESC
 SQL;
@@ -479,9 +479,9 @@ SQL;
 
         $sql = <<< SQL
 SELECT ul.*, bh.mailtitle, bh.mailbody, u.lastname, u.firstname
-FROM {$CFG->prefix}block_hsmail_userlog AS ul
-INNER JOIN {$CFG->prefix}block_hsmail AS bh ON ul.hsmail=bh.id
-INNER JOIN {$CFG->prefix}user AS u ON bh.createuser=u.id
+FROM {block_hsmail_userlog} AS ul
+INNER JOIN {block_hsmail} AS bh ON ul.hsmail=bh.id
+INNER JOIN {user} AS u ON bh.createuser=u.id
 WHERE bh.course = ? AND bh.category = ? AND ul.userid=?
 ORDER BY ul.id DESC
 SQL;
@@ -502,9 +502,9 @@ SQL;
         // Total number acquisition.
         $sql = <<< SQL
 SELECT COUNT(*) AS cnt
-FROM {$CFG->prefix}block_hsmail_userlog AS ul
-INNER JOIN {$CFG->prefix}block_hsmail AS bh ON ul.hsmail=bh.id
-INNER JOIN {$CFG->prefix}user AS u ON bh.createuser=u.id
+FROM {block_hsmail_userlog} AS ul
+INNER JOIN {block_hsmail} AS bh ON ul.hsmail=bh.id
+INNER JOIN {user} AS u ON bh.createuser=u.id
 WHERE bh.course = ? AND bh.category = ? AND ul.userid=?
 SQL;
         $datacount = $DB->get_record_sql ( $sql, array (
@@ -517,7 +517,7 @@ SQL;
         $context = context_course::instance ( $COURSE->id );
 
         // Acquire number of items per page.
-        $sql = "SELECT configdata FROM {$CFG->prefix}block_instances WHERE blockname='hsmail' AND parentcontextid=?";
+        $sql = "SELECT configdata FROM {block_instances} WHERE blockname='hsmail' AND parentcontextid=?";
         $blockconfigdata = $DB->get_record_sql ( $sql, array (
                 $context->id
         ) );
@@ -539,9 +539,9 @@ SQL;
 
         $sql = <<< SQL
 SELECT ul.*, bh.mailtitle, bh.mailbody, u.lastname, u.firstname
-FROM {$CFG->prefix}block_hsmail_userlog AS ul
-INNER JOIN {$CFG->prefix}block_hsmail AS bh ON ul.hsmail=bh.id
-INNER JOIN {$CFG->prefix}user AS u ON bh.createuser=u.id
+FROM {block_hsmail_userlog} AS ul
+INNER JOIN {block_hsmail} AS bh ON ul.hsmail=bh.id
+INNER JOIN {user} AS u ON bh.createuser=u.id
 WHERE bh.id = ? AND bh.course = ? AND bh.category = ? AND ul.userid=?
 SQL;
 

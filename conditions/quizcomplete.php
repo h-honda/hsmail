@@ -44,7 +44,7 @@ class quizcomplete extends hsmailbase {
             $quizselectednumber = count ( $planvaluearray );
 
             $quizsql = <<< SQL
-SELECT id FROM {$CFG->prefix}quiz WHERE course= ? order by id
+SELECT id FROM {quiz} WHERE course= ? order by id
 SQL;
             $quizinfos = $DB->get_records_sql ( $quizsql, array (
                     $courseid
@@ -55,18 +55,18 @@ SQL;
 
         if ($planvalue [0] == 'c') { // Quiz completed.
             $sql = <<< SQL
-SELECT cmc.userid FROM {$CFG->prefix}course_modules_completion AS cmc
-INNER JOIN {$CFG->prefix}course_modules AS cm ON cmc.coursemoduleid = cm.id AND (cmc.completionstate =1 OR cmc.completionstate =2)
-INNER JOIN {$CFG->prefix}modules AS m ON cm.module = m.id AND m.name='quiz'
+SELECT cmc.userid FROM {course_modules_completion} AS cmc
+INNER JOIN {course_modules} AS cm ON cmc.coursemoduleid = cm.id AND (cmc.completionstate =1 OR cmc.completionstate =2)
+INNER JOIN {modules} AS m ON cm.module = m.id AND m.name='quiz'
 WHERE cm.course = {$courseid} AND cm.instance IN ({$planvalue[1]}) AND cmc.userid NOT IN (
-SELECT cmc.userid FROM {$CFG->prefix}course_modules_completion AS cmc
-INNER JOIN {$CFG->prefix}course_modules AS cm ON cmc.coursemoduleid = cm.id AND (cmc.completionstate =1 OR cmc.completionstate =2)
-INNER JOIN {$CFG->prefix}modules AS m ON cm.module = m.id AND m.name='quiz'
+SELECT cmc.userid FROM {course_modules_completion} AS cmc
+INNER JOIN {course_modules} AS cm ON cmc.coursemoduleid = cm.id AND (cmc.completionstate =1 OR cmc.completionstate =2)
+INNER JOIN {modules} AS m ON cm.module = m.id AND m.name='quiz'
 WHERE cm.course = {$courseid} AND cm.instance NOT IN ({$planvalue[1]})
 GROUP BY cmc.userid
-) AND cmc.userid IN (SELECT ra.userid FROM {$CFG->prefix}role_assignments AS ra
-INNER JOIN {$CFG->prefix}context AS con ON con.id = ra.contextid
-INNER JOIN {$CFG->prefix}role AS r ON r.id = ra.roleid AND archetype = 'student'
+) AND cmc.userid IN (SELECT ra.userid FROM {role_assignments} AS ra
+INNER JOIN {context} AS con ON con.id = ra.contextid
+INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
 WHERE ra.modifierid >0 AND con.instanceid = {$courseid})
 GROUP BY cmc.userid
 HAVING count(cmc.userid) = {$quizselectednumber}
@@ -75,28 +75,28 @@ SQL;
 
             if ($quizunselectednumber == 0) {
                 $sql = <<< SQL
-SELECT ra.userid FROM {$CFG->prefix}role_assignments AS ra
-INNER JOIN {$CFG->prefix}context AS con ON con.id = ra.contextid
-INNER JOIN {$CFG->prefix}role AS r ON r.id = ra.roleid AND archetype = 'student'
+SELECT ra.userid FROM {role_assignments} AS ra
+INNER JOIN {context} AS con ON con.id = ra.contextid
+INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
 WHERE ra.modifierid >0 AND con.instanceid = {$courseid}  AND ra.userid NOT IN
-(SELECT cmc.userid FROM {$CFG->prefix}course_modules_completion cmc
-INNER JOIN {$CFG->prefix}course_modules cm ON cm.id = cmc.coursemoduleid
-INNER JOIN {$CFG->prefix}modules m ON m.id = cm.module AND m.name = 'quiz'
-INNER JOIN {$CFG->prefix}quiz q ON q.id = cm.instance
+(SELECT cmc.userid FROM {course_modules_completion} cmc
+INNER JOIN {course_modules} cm ON cm.id = cmc.coursemoduleid
+INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'quiz'
+INNER JOIN {quiz} q ON q.id = cm.instance
 WHERE cmc.completionstate = 1 OR cmc.completionstate = 2 AND cm.course = {$courseid})
 GROUP BY ra.userid
 SQL;
             } else {
                 $sql = <<< SQL
-SELECT ra.userid FROM {$CFG->prefix}role_assignments AS ra
-INNER JOIN {$CFG->prefix}context AS con ON con.id = ra.contextid
-INNER JOIN {$CFG->prefix}role AS r ON r.id = ra.roleid AND archetype = 'student'
+SELECT ra.userid FROM {role_assignments} AS ra
+INNER JOIN {context} AS con ON con.id = ra.contextid
+INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
 WHERE ra.modifierid >0 AND con.instanceid = {$courseid}  AND ra.userid NOT IN
 (
-SELECT cmc.userid FROM {$CFG->prefix}course_modules_completion cmc
-INNER JOIN {$CFG->prefix}course_modules cm ON cm.id = cmc.coursemoduleid
-INNER JOIN {$CFG->prefix}modules m ON m.id = cm.module AND m.name = 'quiz'
-INNER JOIN {$CFG->prefix}quiz q ON q.id = cm.instance
+SELECT cmc.userid FROM {course_modules_completion} cmc
+INNER JOIN {course_modules} cm ON cm.id = cmc.coursemoduleid
+INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'quiz'
+INNER JOIN {quiz} q ON q.id = cm.instance
 WHERE q.id in({$planvalue[1]}) AND (cmc.completionstate = 1 OR cmc.completionstate = 2) AND cm.course = {$courseid}
 GROUP BY cmc.userid
 HAVING count(cmc.userid) = {$quizselectednumber}
@@ -105,7 +105,7 @@ SQL;
             }
         } else { // No setting.
             $sql = <<< SQL
-SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
+SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
 SQL;
         }
         return $sql;

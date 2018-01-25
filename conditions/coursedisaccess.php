@@ -39,28 +39,28 @@ class coursedisaccess extends hsmailbase {
             $disaccesstime = strtotime ( date ( "Y-m-d H:i:s", strtotime ( "-" . $planvalue . "day" ) ) );
 
             $sql = <<< SQL
-(select ra.userid from {$CFG->prefix}role_assignments ra INNER JOIN
+(select ra.userid from {role_assignments} ra INNER JOIN
 (select lsl.userid, max(lsl.timecreated) timecreated
-FROM {$CFG->prefix}logstore_standard_log AS lsl
+FROM {logstore_standard_log} AS lsl
 WHERE lsl.eventname = '\\core\\event\\course_viewed' AND lsl.action = 'viewed'
 AND lsl.courseid = {$courseid} GROUP BY lsl.userid) AS maxtime ON maxtime.userid = ra.userid
-INNER JOIN {$CFG->prefix}context AS con ON con.id = ra.contextid
-INNER JOIN {$CFG->prefix}role AS r ON r.id = ra.roleid AND archetype = 'student'
+INNER JOIN {context} AS con ON con.id = ra.contextid
+INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
 WHERE ra.modifierid >0 AND con.instanceid = {$courseid} AND maxtime.timecreated < {$disaccesstime}
 GROUP BY ra.userid)
 UNION
-(SELECT ra.userid FROM {$CFG->prefix}role_assignments AS ra
-INNER JOIN {$CFG->prefix}context AS con ON con.id = ra.contextid
-INNER JOIN {$CFG->prefix}role AS r ON r.id = ra.roleid AND archetype = 'student'
+(SELECT ra.userid FROM {role_assignments} AS ra
+INNER JOIN {context} AS con ON con.id = ra.contextid
+INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
 WHERE ra.modifierid >0 AND con.instanceid = {$courseid} AND ra.userid NOT IN
-(SELECT lsl.userid FROM {$CFG->prefix}logstore_standard_log AS lsl
+(SELECT lsl.userid FROM {logstore_standard_log} AS lsl
 WHERE lsl.eventname = '\\core\\event\\course_viewed' AND lsl.action = 'viewed'
 AND lsl.courseid = {$courseid})
 GROUP BY ra.userid)
 SQL;
         } else { // No setting.
             $sql = <<< SQL
-SELECT T2.userid AS userid FROM {$CFG->prefix}block_hsmail_temp AS T2
+SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
 SQL;
         }
 

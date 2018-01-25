@@ -40,8 +40,8 @@ SELECT
     bh.mailbody,
     bhp.planvalue,
     bh.hsmail
-FROM {$CFG->prefix}mdl_block_hsmail AS bh
-INNER JOIN {$CFG->prefix}block_hsmail_plan AS bhp ON bh.id = bhp.hsmail
+FROM {block_hsmail} AS bh
+INNER JOIN {block_hsmail_plan} AS bhp ON bh.id = bhp.hsmail
 WHERE
 bhp.plan = ?
 AND bh.executeflag = 0

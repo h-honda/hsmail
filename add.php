@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Form for add hsmail block instances.
+ *
+ * @package   block_html
+ * @copyright 2017 Human Science Co., Ltd.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once( dirname ( dirname ( dirname ( __FILE__ ) ) ) . '/config.php' );
 
 $id = optional_param ( 'id', 0, PARAM_INT );
