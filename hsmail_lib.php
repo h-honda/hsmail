@@ -28,7 +28,7 @@ class hsmail_detailform extends moodleform {
         parent::__construct ();
     }
     /**
-     *
+     * Contents definition.
      */
     public function definition() {
         global $CFG, $COURSE;
@@ -84,7 +84,7 @@ class hsmail_detailform extends moodleform {
     }
 
     /**
-     * When there is an individual check
+     * When there is an individual check.
      * @param unknown $data
      * @param unknown $files
      */
@@ -110,6 +110,11 @@ class hsmail_detailform extends moodleform {
     }
 }
 
+/**
+ *
+ * @author h-honda
+ *
+ */
 class hsmail_lib {
     // Location of condition file.
     protected $conditiondir;
@@ -220,7 +225,12 @@ class hsmail_lib {
         // Transaction end so far.
     }
 
-    // Delete job.
+    //
+    /**
+     * Delete job.
+     * @param unknown $jobid
+     * @throws moodle_exception
+     */
     public function delete_job($jobid) {
         global $DB;
         // Check jobid.
@@ -262,6 +272,12 @@ class hsmail_lib {
         }
         // Transaction end so far.
     }
+    /**
+     * Insert jobs.
+     * @param unknown $data
+     * @param unknown $plan
+     * @throws moodle_exception
+     */
     public function insert_job($data, $plan = null) {
         global $USER, $COURSE, $DB;
 
@@ -325,7 +341,11 @@ class hsmail_lib {
         }
     }
 
-    // Set paging data to set 2014-04-18.
+    /**
+     * Set paging data to set 2014-04-18.
+     * @param unknown $reservation
+     * @param unknown $flag
+     */
     public function set_paging_data($reservation, $flag) {
         global $CFG, $DB, $COURSE;
 
@@ -360,7 +380,11 @@ SQL;
         $this->page = optional_param ( 'page', 0, PARAM_INT ); // Page number.
     }
 
-    // Create paging HTML 2014-04-18.
+    /**
+     * Create paging HTML 2014-04-18.
+     * @param unknown $url
+     * @return string
+     */
     public function get_paging($url) {
         global $COURSE, $OUTPUT;
         $baseurl = new moodle_url ( $url, array (
@@ -370,7 +394,10 @@ SQL;
         return $OUTPUT->render ( $pagingbar );
     }
 
-    // Acquire the currently registered job list.
+    /**
+     * Acquire the currently registered job list.
+     * @param number $flag
+     */
     public function get_job_list($flag = 0) {
         global $CFG, $DB, $COURSE;
 
@@ -404,7 +431,10 @@ SQL;
         return $list;
     }
 
-    // Return a delivered user.
+    /**
+     * Return a delivered user.
+     * @return NULL[]
+     */
     public function get_sent_list() {
         global $DB, $CFG;
         $sql = <<< SQL
@@ -418,7 +448,11 @@ SQL;
         }
         return $list;
     }
-    // Return undelivered users.
+
+    /**
+     * Return undelivered users.
+     * @return NULL[]
+     */
     public function get_send_list() {
         global $DB, $CFG;
         // Retrieve the number of remaining mails from the queue.
@@ -434,7 +468,11 @@ SQL;
         return $list;
     }
 
-    // Return the number of undelivered courses.
+    /**
+     * Return the number of undelivered courses.
+     * @param unknown $courseid
+     * @return number
+     */
     public function get_course_send_list($courseid) {
         global $DB, $CFG;
         // Retrieve the number of remaining mails from the queue.
@@ -453,7 +491,9 @@ SQL;
         }
     }
 
-    // Delivery start, return completion.
+    /**
+     * Delivery start, return completion.
+     */
     public function get_mail_start_end() {
         global $DB, $CFG;
         $sql = <<< SQL
@@ -470,7 +510,9 @@ SQL;
         return $list;
     }
 
-    // Retrieve mail list addressed to you.
+    /**
+     * Retrieve mail list addressed to you.
+     */
     public function get_mail_list() {
         global $CFG, $DB, $COURSE, $USER;
 
@@ -495,7 +537,9 @@ SQL;
         return $list;
     }
 
-    // Set paging data as set.
+    /**
+     * Set paging data as set.
+     */
     public function set_paging_data_mail_list() {
         global $CFG, $DB, $COURSE, $USER;
 
@@ -531,7 +575,10 @@ SQL;
         $this->page = optional_param ( 'page', 0, PARAM_INT ); // Page number.
     }
 
-    // Retrieve mail list addressed to you.
+    /**
+     * Retrieve mail list addressed to you.
+     * @return mixed|boolean
+     */
     public function get_mail_detail() {
         global $CFG, $DB, $COURSE, $USER;
 
