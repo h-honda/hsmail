@@ -51,7 +51,7 @@ $PAGE->navbar->add ( get_string ( 'condition1', 'block_hsmail' ), "?id=$id&sessk
 require_once( 'hsmail_lib.php' );
 $mform = new hsmail_detailform ();
 
-if ( $mform->is_cancelled () ) {
+if ( $mform->is_cancelled() ) {
     // Handle form cancel operation, if cancel button is present on form.
     redirect ( new moodle_url ( '/blocks/hsmail/jobsetting.php', array ( 'id' => $id, 'sesskey' => sesskey() ) ) );
 } else if ( $fromform = $mform->get_data () ) {

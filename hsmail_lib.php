@@ -35,12 +35,12 @@ class hsmail_detailform extends moodleform {
      */
     public function __construct($jobid = 0) {
         $this->jobid = $jobid;
-        parent::__construct ();
+        parent::__construct();
     }
     /**
      * Contents definition.
      */
-    public function definition() {
+    protected function definition() {
         global $CFG;
 
         $hsmailobj = new hsmail_lib ();

@@ -30,7 +30,6 @@ class assigncomplete extends hsmailbase {
         $this->conditionname = 'assigncomplete';
     }
 
-
     /**
      * Return the SQL statement of the user list that matches this condition
      *
@@ -166,6 +165,8 @@ SQL;
  */
 class assigncomplete_form extends moodleform {
 
+    public function definition() {
+    }
     /**
      * Setting screen
      * @param unknown $mform
