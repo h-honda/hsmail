@@ -442,7 +442,7 @@ SQL;
         $ret = $DB->get_records_sql ( $sql );
 
         $list = array ();
-        while ( list ( $key, $value ) = each ( $ret ) ) {
+        foreach ($ret as $value) {
             $list [$value->hsmail] = $value->c;
         }
         return $list;
@@ -461,7 +461,7 @@ GROUP BY hsmail
 SQL;
         $ret = $DB->get_records_sql ( $sql );
         $list = array ();
-        while ( list ( $key, $value ) = each ( $ret ) ) {
+        foreach ($ret as $value) {
             $list [$value->hsmail] = $value->c;
         }
         return $list;
@@ -502,7 +502,7 @@ ORDER BY hsmail DESC
 SQL;
         $ret = $DB->get_records_sql ( $sql );
         $list = array ();
-        while ( list ( $key, $value ) = each ( $ret ) ) {
+        foreach ($ret as $value) {
             $list [$value->hsmail] ['start'] = $value->min;
             $list [$value->hsmail] ['end'] = $value->max;
         }

@@ -51,7 +51,7 @@ SQL;
                     $courseid
             ) );
             $forumnumber = count ( $foruminfos );
-            $forumunselectednumber = $forumnumber - $forumselect;
+            $forumselect = $forumnumber - $forumselect;
         }
 
         if ($planvalue [0] == 'c') { // Forum completed.

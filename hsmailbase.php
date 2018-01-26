@@ -32,10 +32,12 @@ abstract class hsmailbase {
      * @return unknown
      */
     public function validation($data = '', $files = '', &$errormsg) {
+        $data = '';
+        $file = '';
         return $errormsg;
     }
     public function get_target_course() {
-        global $DB, $CFG;
+        global $DB;
         $sql = <<< SQL
 SELECT
     bh.id,

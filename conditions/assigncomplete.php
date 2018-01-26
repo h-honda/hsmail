@@ -53,7 +53,7 @@ SQL;
                     $courseid
             ) );
             $assignnumber = count ( $assigninfos );
-            $assignunselectnum = $assignnumber - $asignunselect;
+            $asignunselect = $assignnumber - $asignunselect;
         }
 
         if ( $planvalue [0] == 'c' ) { // Assign completed.

@@ -212,7 +212,7 @@ SQL;
 
                             reset( $tmpuser );
                             $idstmp = array();
-                            while (list ( $key2, $value2 ) = each ( $tmpuser) ) {
+                            foreach ( $tmpuser as $value2 ) {
                                 $idstmp[] = $value2->userid;
                             }
                             $ids = implode(',', $idstmp);
@@ -333,7 +333,7 @@ SQL;
 
                 // Delete mail from queue.
                 reset( $tagetmails );
-                while ( list ( $key3, $value3 ) = each ( $tagetmails )) {
+                foreach ( $tagetmails as $value3 ) {
                     $DB->delete_records( 'block_hsmail_queue', array ( 'id' => $value3->id ) );
                 }
 
@@ -352,7 +352,7 @@ SQL;
 
                 // Delete mail from queue.
                 reset( $tagetmails );
-                while ( list ( $key4, $value4 ) = each ( $tagetmails )) {
+                foreach ($tagetmails as $value4) {
                     $DB->delete_records( 'block_hsmail_queue', array ( 'id' => $value4->id ) );
                 }
             }

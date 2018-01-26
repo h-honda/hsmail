@@ -126,6 +126,8 @@ JS;
 
     // Custom validation should be added here.
     public function validation($data = '', $files = '') {
+        $data = '';
+        $files = '';
         return array ();
     }
 }
@@ -149,7 +151,7 @@ class hsmail_sent_form extends moodleform {
 
         // Undelivered number calculation.
         $sum = 0;
-        while ( list ( $key, $value ) = each ( $misumi ) ) {
+        foreach ($misumi as $value) {
             $sum += $value;
         }
         reset ( $misumi );
@@ -212,9 +214,9 @@ class hsmail_sent_form extends moodleform {
             $tmpsumi = (array_key_exists ( $tmp->id, $sumi )) ? $sumi [$tmp->id] : 0;
             $tmpmisumi = (array_key_exists ( $tmp->id, $misumi )) ? $misumi [$tmp->id] : 0;
             $row [] = ($tmp->executeflag == 2) ? $tmpsumi + $tmpmisumi : 'error';
-            $row [] = (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['start'] ) : '' ;
+            $row [] = (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['start'] ) : '';
             if (! array_key_exists ( $tmp->id, $misumi )) {
-                $buff = (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['end'] ) : '' ;
+                $buff = (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['end'] ) : '';
             } else {
                 $buff = '';
             }
@@ -229,6 +231,8 @@ class hsmail_sent_form extends moodleform {
         $mform->addElement ( 'html', $paging );
     }
     public function validation($data = '', $files = '') {
+        $data = '';
+        $files = '';
         return array ();
     }
 }
@@ -285,6 +289,8 @@ class hsmail_maillist_form extends moodleform {
         $mform->addElement ( 'html', $paging );
     }
     public function validation($data = '', $files = '') {
+        $data = '';
+        $files = '';
         return array ();
     }
 }
@@ -308,6 +314,8 @@ class hsmail_maildetail_form extends moodleform {
                 nl2br ( htmlspecialchars ( $this->conv_placeholder ( $maildetail->mailbody ) ) ) );
     }
     public function validation($data, $files) {
+        $data = '';
+        $files = '';
         return array ();
     }
 
