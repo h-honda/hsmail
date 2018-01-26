@@ -43,7 +43,7 @@ class assigncomplete extends hsmailbase {
         $param = array();
         if ( is_array ( $planvalue ) && isset ( $planvalue [1] ) ) {
             $planvaluearray = explode ( ',', $planvalue [1] );
-            $asignunselect = count ( $planvaluearray );
+            $asignselect = count ( $planvaluearray );
 
             $assignsql = <<< SQL
 SELECT id FROM {assign} WHERE course= ? order by id
@@ -53,7 +53,7 @@ SQL;
                     $courseid
             ) );
             $assignnumber = count ( $assigninfos );
-            $asignunselect = $assignnumber - $asignunselect;
+            $asignunselect = $assignnumber - $asignselect;
         }
 
         if ( $planvalue [0] == 'c' ) { // Assign completed.
@@ -75,10 +75,10 @@ WHERE ra.modifierid >0 AND con.instanceid = ?)
 GROUP BY cmc.userid
 HAVING count(cmc.userid) = ?
 SQL;
-            $param = array($courseid, $planvalue[1], $courseid, $planvalue[1], $courseid, $asignunselect);
+            $param = array($courseid, $planvalue[1], $courseid, $planvalue[1], $courseid, $asignselect);
         } else if ( $planvalue [0] == 'i' ) { // Assign not completed.
 
-            if ( $assignunselectednumber == 0 ) {
+            if ( $asignunselect == 0 ) {
                 $sql = <<< SQL
 SELECT ra.userid FROM {role_assignments} AS ra
 INNER JOIN {context} AS con ON con.id = ra.contextid
@@ -108,7 +108,7 @@ GROUP BY cmc.userid
 HAVING count(cmc.userid) = ?
 )
 SQL;
-                $param = array($courseid, $planvalue[1], $courseid, $asignunselect);
+                $param = array($courseid, $planvalue[1], $courseid, $asignselect);
             }
         } else { // No setting.
             $sql = <<< SQL
