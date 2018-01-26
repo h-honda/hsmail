@@ -105,7 +105,7 @@ GROUP BY cmc.userid
 HAVING count(cmc.userid) = {$quizselectednumber}
 )
 SQL;
-                $param = array($courseid, $planvalue[1], $courseid, $quizselectednumber )
+                $param = array($courseid, $planvalue[1], $courseid, $quizselectednumber );
             }
         } else { // No setting.
             $sql = <<< SQL

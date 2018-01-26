@@ -20,8 +20,8 @@
  * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
  */
 defined('MOODLE_INTERNAL') || die();
-$plugin->version  = 2018012200;
+$plugin->version  = 2018012600;
 $plugin->requires = 2016052303;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '1.4.2';
+$plugin->release = '1.4.3';
 $plugin->component = 'block_hsmail';
