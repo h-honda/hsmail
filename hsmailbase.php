@@ -13,10 +13,19 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
+/**
+ *
+ * @package   block_hsmail
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ */
 
 defined ( 'MOODLE_INTERNAL' ) || die ();
 
+/**
+ *
+ * @author h-honda
+ *
+ */
 abstract class hsmailbase {
     protected $conditionname;
     // Sending user registration.
@@ -59,7 +68,11 @@ SQL;
         return $ret1;
     }
 
-    // Return plug-in specific settings.
+    /**
+     * Return plug-in specific settings.
+     * @param number $hsmailid
+     * @return boolean|mixed|stdClass|false
+     */
     public function get_planvalue($hsmailid = 0) {
         if ( $hsmailid == 0 ) {
             return false;

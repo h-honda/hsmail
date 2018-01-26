@@ -13,7 +13,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
+/**
+ *
+ * @package   block_hsmail
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ */
 require_once(dirname ( dirname ( dirname ( __FILE__ ) ) ) . '/config.php');
 
 $id = optional_param ( 'id', 0, PARAM_INT );

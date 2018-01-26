@@ -13,7 +13,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
+/**
+ *
+ * @package   block_hsmail
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ */
 $string['hsmail:addinstance'] = 'HSメール追加';
 $string['hsmail:addcondition'] = '条件追加権限';
 $string['hsmail:viewmaillist'] = 'メールリスト表示';

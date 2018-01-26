@@ -14,7 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
+/**
+ *
+ * @package   block_hsmail
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ */
 defined('MOODLE_INTERNAL') || die();
 $plugin->version  = 2018012200;
 $plugin->requires = 2016052303;

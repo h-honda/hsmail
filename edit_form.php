@@ -20,6 +20,11 @@
  * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
  */
 defined ( 'MOODLE_INTERNAL' ) || die ();
+/**
+ *
+ * @author h-honda
+ *
+ */
 class block_hsmail_edit_form extends block_edit_form {
     protected function specific_definition($mform) {
         $mform->addElement ( 'header', 'configheader', get_string ( 'blocksettings', 'block' ) );

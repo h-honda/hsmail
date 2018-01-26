@@ -13,9 +13,12 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
+/**
+ *
+ * @package   block_hsmail
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ */
 defined('MOODLE_INTERNAL') || die();
-
 require_once( $CFG->libdir . '/formslib.php' );
 /**
  *
@@ -131,6 +134,11 @@ JS;
         return array ();
     }
 }
+/**
+ *
+ * @author h-honda
+ *
+ */
 class hsmail_sent_form extends moodleform {
     public function definition() {
         global $CFG, $COURSE;
@@ -294,7 +302,17 @@ class hsmail_maillist_form extends moodleform {
         return array ();
     }
 }
+/**
+ *
+ * @author h-honda
+ *
+ */
 class hsmail_maildetail_form extends moodleform {
+    /**
+     *
+     * {@inheritDoc}
+     * @see moodleform::definition()
+     */
     public function definition() {
         global $CFG, $COURSE;
         $mform = $this->_form; // Don't forget the underscore!
@@ -313,13 +331,22 @@ class hsmail_maildetail_form extends moodleform {
         $mform->addElement ( 'static', 'mailbody', get_string ( 'mailbody', 'block_hsmail' ),
                 nl2br ( htmlspecialchars ( $this->conv_placeholder ( $maildetail->mailbody ) ) ) );
     }
+    /**
+     *
+     * {@inheritDoc}
+     * @see moodleform::validation()
+     */
     public function validation($data, $files) {
         $data = '';
         $files = '';
         return array ();
     }
 
-    // Place folder processing.
+    /**
+     * Place folder processing.
+     * @param unknown $body
+     * @return mixed
+     */
     public function conv_placeholder($body) {
         global $COURSE, $USER;
 
