@@ -41,6 +41,7 @@ class assigncomplete extends hsmailbase {
     public function regist_users_sql($courseid, $planvalue) {
         global $DB;
 
+        $param = array();
         if ( is_array ( $planvalue ) && isset ( $planvalue [1] ) ) {
             $planvaluearray = explode ( ',', $planvalue [1] );
             $asignunselect = count ( $planvaluearray );
@@ -62,19 +63,20 @@ SQL;
 SELECT cmc.userid FROM {course_modules_completion} AS cmc
 INNER JOIN {course_modules} AS cm ON cmc.coursemoduleid = cm.id AND (cmc.completionstate =1 OR cmc.completionstate =2)
 INNER JOIN {modules} AS m ON cm.module = m.id AND m.name='assign'
-WHERE cm.course = {$courseid} AND cm.instance IN ({$planvalue[1]}) AND cmc.userid NOT IN (
+WHERE cm.course = ? AND cm.instance IN (?) AND cmc.userid NOT IN (
 SELECT cmc.userid FROM {course_modules_completion} AS cmc
 INNER JOIN {course_modules} AS cm ON cmc.coursemoduleid = cm.id AND (cmc.completionstate =1 OR cmc.completionstate =2)
 INNER JOIN {modules} AS m ON cm.module = m.id AND m.name='assign'
-WHERE cm.course = {$courseid} AND cm.instance NOT IN ({$planvalue[1]})
+WHERE cm.course = ? AND cm.instance NOT IN (?)
 GROUP BY cmc.userid
 ) AND cmc.userid IN (SELECT ra.userid FROM {role_assignments} AS ra
 INNER JOIN {context} AS con ON con.id = ra.contextid
 INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
-WHERE ra.modifierid >0 AND con.instanceid = {$courseid})
+WHERE ra.modifierid >0 AND con.instanceid = ?)
 GROUP BY cmc.userid
-HAVING count(cmc.userid) = {$asignunselect}
+HAVING count(cmc.userid) = ?
 SQL;
+            $param = array($courseid, $planvalue[1], $courseid, $planvalue[1], $courseid, $asignunselect);
         } else if ( $planvalue [0] == 'i' ) { // Assign not completed.
 
             if ( $assignunselectednumber == 0 ) {
@@ -82,30 +84,32 @@ SQL;
 SELECT ra.userid FROM {role_assignments} AS ra
 INNER JOIN {context} AS con ON con.id = ra.contextid
 INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
-WHERE ra.modifierid >0 AND con.instanceid = {$courseid}  AND ra.userid NOT IN
+WHERE ra.modifierid >0 AND con.instanceid = ?  AND ra.userid NOT IN
 (SELECT cmc.userid FROM {course_modules_completion} cmc
 INNER JOIN {course_modules} cm ON cm.id = cmc.coursemoduleid
 INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'assign'
 INNER JOIN {assign} a ON a.id = cm.instance
-WHERE cmc.completionstate = 1 OR cmc.completionstate = 2 AND cm.course = {$courseid})
+WHERE cmc.completionstate = 1 OR cmc.completionstate = 2 AND cm.course = ?)
 GROUP BY ra.userid
 SQL;
+                $param = array($courseid, $courseid);
             } else {
                 $sql = <<< SQL
 SELECT ra.userid FROM {role_assignments} AS ra
 INNER JOIN {context} AS con ON con.id = ra.contextid
 INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
-WHERE ra.modifierid >0 AND con.instanceid = {$courseid}  AND ra.userid NOT IN
+WHERE ra.modifierid >0 AND con.instanceid = ?  AND ra.userid NOT IN
 (
 SELECT cmc.userid FROM {course_modules_completion} cmc
 INNER JOIN {course_modules} cm ON cm.id = cmc.coursemoduleid
 INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'assign'
 INNER JOIN {assign} a ON a.id = cm.instance
-WHERE a.id in({$planvalue[1]}) AND (cmc.completionstate = 1 OR cmc.completionstate = 2) AND cm.course = {$courseid}
+WHERE a.id in(?) AND (cmc.completionstate = 1 OR cmc.completionstate = 2) AND cm.course = ?
 GROUP BY cmc.userid
-HAVING count(cmc.userid) = {$asignunselect}
+HAVING count(cmc.userid) = ?
 )
 SQL;
+                $param = array($courseid, $planvalue[1], $courseid, $asignunselect);
             }
         } else { // No setting.
             $sql = <<< SQL
@@ -113,7 +117,7 @@ SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
 SQL;
         }
 
-        return $sql;
+        return array($sql, $param);
     }
 
     /**
@@ -161,9 +165,6 @@ SQL;
  *
  */
 class assigncomplete_form extends moodleform {
-
-    public function definition() {
-    }
 
     /**
      * Setting screen

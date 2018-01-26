@@ -33,7 +33,7 @@ class coursedisaccess extends hsmailbase {
      * @return string
      */
     public function regist_users_sql($courseid, $planvalue) {
-
+        $param = array();
         if ( $planvalue != 'a' ) {
             $disaccesstime = strtotime ( date ( "Y-m-d H:i:s", strtotime ( "-" . $planvalue . "day" ) ) );
 
@@ -57,13 +57,14 @@ WHERE lsl.eventname = '\\core\\event\\course_viewed' AND lsl.action = 'viewed'
 AND lsl.courseid = {$courseid})
 GROUP BY ra.userid)
 SQL;
+            $param = array($courseid, $courseid, $disaccesstime, $courseid, $courseid);
         } else { // No setting.
             $sql = <<< SQL
 SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
 SQL;
         }
 
-        return $sql;
+        return array($sql, $param);
     }
 
     /**

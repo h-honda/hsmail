@@ -37,18 +37,21 @@ class complete extends hsmailbase {
      * @return string
      */
     public function regist_users_sql($courseid, $planvalue) {
+        $param = array();
 
         if ( $planvalue == 'c' ) { // Course completed.
             $sql = <<< SQL
-SELECT userid FROM {course_completions} WHERE course={$courseid} AND timecompleted>0
+SELECT userid FROM {course_completions} WHERE course=? AND timecompleted>0
 SQL;
+            $param = array($courseid);
         } else if ( $planvalue == 'i' ) { // Course not completed.
             $sql = <<< SQL
 SELECT userid FROM {block_hsmail_temp}
 WHERE userid NOT IN
 (SELECT userid FROM {course_completions}
-WHERE course={$courseid} AND timecompleted>0)
+WHERE course=? AND timecompleted>0)
 SQL;
+            $param = array($courseid);
         } else { // No setting.
             $sql = <<< SQL
 SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2

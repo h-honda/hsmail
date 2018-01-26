@@ -204,11 +204,11 @@ SQL;
                         $objwork = new $cf ();
                         // Generate user acquisition SQL meeting conditions.
                         $planvalue = unserialize ( base64_decode ( $tmp->planvalue ) );
-                        $tmpsql = $objwork->regist_users_sql ( $value->course, $planvalue );
+                        list($tmpsql, $param) = $objwork->regist_users_sql ( $value->course, $planvalue );
 
                         // Refine to users who match the conditions.
                         try {
-                            $tmpuser = $DB->get_records_sql ( $tmpsql );
+                            $tmpuser = $DB->get_records_sql ( $tmpsql, $param );
 
                             reset( $tmpuser );
                             $idstmp = array();

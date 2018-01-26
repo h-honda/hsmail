@@ -36,7 +36,7 @@ class target extends hsmailbase {
      * @return string
      */
     public function regist_users_sql($courseid, $planvalue) {
-
+        $param = array();
         if ($planvalue == 'a') { // Site user.
             $sql = <<< SQL
 SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
@@ -48,17 +48,19 @@ SQL;
         } else if (substr ( $planvalue, 0, 1 ) == 'g') { // Group.
             $groupid = ( int ) substr ( $planvalue, 1 );
             $sql = <<< SQL
-SELECT userid FROM {groups_members} WHERE groupid={$groupid}
+SELECT userid FROM {groups_members} WHERE groupid= ?
 SQL;
+            $param = array($groupid);
         } else {
             // Cohort.
             $sql = <<< SQL
 SELECT userid FROM {cohort_members} AS cm
-WHERE cm.cohortid = {$planvalue}
+WHERE cm.cohortid = ?
 SQL;
+            $param = array($planvalue);
         }
 
-        return $sql;
+        return array($sql, $param);
     }
 
     /**
