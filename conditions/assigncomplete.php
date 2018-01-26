@@ -85,13 +85,13 @@ INNER JOIN {context} AS con ON con.id = ra.contextid
 INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
 WHERE ra.modifierid >0 AND con.instanceid = ?  AND ra.userid NOT IN
 (SELECT cmc.userid FROM {course_modules_completion} cmc
-INNER JOIN {course_modules} cm ON cm.id = cmc.coursemoduleid
+INNER JOIN {course_modules} cm ON cm.id = cmc.coursemoduleid AND cm.instance IN (?)
 INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'assign'
 INNER JOIN {assign} a ON a.id = cm.instance
 WHERE cmc.completionstate = 1 OR cmc.completionstate = 2 AND cm.course = ?)
 GROUP BY ra.userid
 SQL;
-                $param = array($courseid, $courseid);
+                $param = array($courseid, $planvalue[1], $courseid);
             } else {
                 $sql = <<< SQL
 SELECT ra.userid FROM {role_assignments} AS ra
