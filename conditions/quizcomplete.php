@@ -112,7 +112,7 @@ SQL;
 SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
 SQL;
         }
-        return $sql;
+        return array($sql, $param);
     }
 
     /**
