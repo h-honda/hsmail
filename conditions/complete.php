@@ -37,7 +37,6 @@ class complete extends hsmailbase {
      * @return string
      */
     public function regist_users_sql($courseid, $planvalue) {
-        global $DB, $CFG;
 
         if ( $planvalue == 'c' ) { // Course completed.
             $sql = <<< SQL
@@ -89,7 +88,7 @@ class complete_form extends moodleform {
      * @param unknown $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
-        global $CFG, $COURSE;
+        global $COURSE;
 
         $completioninfo = new completion_info ( $COURSE );
         if ( ! $completioninfo->is_enabled () ) {
@@ -102,7 +101,7 @@ class complete_form extends moodleform {
                 'i' => get_string ( 'complete_i', 'block_hsmail' )
         );
 
-        $select = $mform->addElement ( 'select', 'complete', get_string ( 'complete', 'block_hsmail' ), $options );
+        $mform->addElement ( 'select', 'complete', get_string ( 'complete', 'block_hsmail' ), $options );
 
         $mform->closeHeaderBefore ( 'complete_condition' );
 

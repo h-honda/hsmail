@@ -37,7 +37,7 @@ class quizcomplete extends hsmailbase {
      * @return string
      */
     public function regist_users_sql($courseid, $planvalue) {
-        global $DB, $CFG;
+        global $DB;
 
         if (is_array ( $planvalue ) && isset ( $planvalue [1] )) {
             $planvaluearray = explode ( ',', $planvalue [1] );
@@ -165,7 +165,7 @@ class quizcomplete_form extends moodleform {
      * @param unknown $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
-        global $CFG, $DB, $COURSE;
+        global $DB, $COURSE;
 
         // Quiz complete status.
         $options = array (

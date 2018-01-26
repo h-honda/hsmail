@@ -37,11 +37,11 @@ class forumcomplete extends hsmailbase {
      * @return string
      */
     public function regist_users_sql($courseid, $planvalue) {
-        global $DB, $CFG;
+        global $DB;
 
         if (is_array ( $planvalue ) && isset ( $planvalue [1] )) {
             $planvaluearray = explode ( ',', $planvalue [1] );
-            $forumselectednumber = count ( $planvaluearray );
+            $forumselectednum = count ( $planvaluearray );
 
             $forumsql = <<< SQL
 SELECT id FROM {forum} WHERE course= ? order by id
@@ -167,7 +167,7 @@ class forumcomplete_form extends moodleform {
      * @param unknown $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
-        global $CFG, $DB, $COURSE;
+        global $DB, $COURSE;
 
         // Fourm completed status.
         $options = array (

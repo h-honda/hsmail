@@ -27,7 +27,7 @@ class hsmaillib_wrapper {
     private $mailfrom = '';
     private $mailfromdisp = '';
     // Title of mail transmission.
-    private $mailsubject = '';
+    // private $mailsubject = '';
     public function __construct() {
         $this->mailfrom = get_config('core', 'noreplyaddress');
         $this->mailfromdisp = 'noreply';

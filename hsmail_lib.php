@@ -31,7 +31,7 @@ class hsmail_detailform extends moodleform {
      * Contents definition.
      */
     public function definition() {
-        global $CFG, $COURSE;
+        global $CFG;
 
         $hsmailobj = new hsmail_lib ();
 
@@ -225,7 +225,6 @@ class hsmail_lib {
         // Transaction end so far.
     }
 
-    //
     /**
      * Delete job.
      * @param unknown $jobid
@@ -347,7 +346,7 @@ class hsmail_lib {
      * @param unknown $flag
      */
     public function set_paging_data($reservation, $flag) {
-        global $CFG, $DB, $COURSE;
+        global $DB, $COURSE;
 
         // Total number acquisition.
         $sql = <<< SQL
@@ -399,7 +398,7 @@ SQL;
      * @param number $flag
      */
     public function get_job_list($flag = 0) {
-        global $CFG, $DB, $COURSE;
+        global $DB, $COURSE;
 
         $sortorder = ($flag == 0) ? 'ASC' : 'DESC';
         $reservation = '';
@@ -454,7 +453,7 @@ SQL;
      * @return NULL[]
      */
     public function get_send_list() {
-        global $DB, $CFG;
+        global $DB;
         // Retrieve the number of remaining mails from the queue.
         $sql = <<< SQL
 SELECT hsmail,count(*) AS c FROM {block_hsmail_queue}
@@ -474,7 +473,7 @@ SQL;
      * @return number
      */
     public function get_course_send_list($courseid) {
-        global $DB, $CFG;
+        global $DB;
         // Retrieve the number of remaining mails from the queue.
         $sql = <<< SQL
 SELECT count(*) AS cnt FROM {block_hsmail_queue} AS T1
@@ -495,7 +494,7 @@ SQL;
      * Delivery start, return completion.
      */
     public function get_mail_start_end() {
-        global $DB, $CFG;
+        global $DB;
         $sql = <<< SQL
 SELECT hsmail,min(timecreated) AS min, max(timecreated) AS max FROM {block_hsmail_userlog}
 GROUP BY hsmail
@@ -514,7 +513,7 @@ SQL;
      * Retrieve mail list addressed to you.
      */
     public function get_mail_list() {
-        global $CFG, $DB, $COURSE, $USER;
+        global $DB, $COURSE, $USER;
 
         // 2014-04-18 Set paging data as set.
         $this->set_paging_data_mail_list ();
@@ -541,7 +540,7 @@ SQL;
      * Set paging data as set.
      */
     public function set_paging_data_mail_list() {
-        global $CFG, $DB, $COURSE, $USER;
+        global $DB, $COURSE, $USER;
 
         // Total number acquisition.
         $sql = <<< SQL
@@ -580,7 +579,7 @@ SQL;
      * @return mixed|boolean
      */
     public function get_mail_detail() {
-        global $CFG, $DB, $COURSE, $USER;
+        global $DB, $COURSE, $USER;
 
         $mailid = optional_param ( 'mailid', 0, PARAM_INT );
 

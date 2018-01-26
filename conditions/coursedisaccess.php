@@ -33,7 +33,6 @@ class coursedisaccess extends hsmailbase {
      * @return string
      */
     public function regist_users_sql($courseid, $planvalue) {
-        global $DB, $CFG;
 
         if ( $planvalue != 'a' ) {
             $disaccesstime = strtotime ( date ( "Y-m-d H:i:s", strtotime ( "-" . $planvalue . "day" ) ) );
@@ -97,7 +96,6 @@ class coursedisaccess_form extends moodleform {
      * @param unknown $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
-        global $CFG, $COURSE;
 
         $maxdays = 30;
         for ($i = 1; $i <= $maxdays; $i ++) {
@@ -112,7 +110,7 @@ class coursedisaccess_form extends moodleform {
         $options = array (
                 'a' => '-'
         ) + $disaccesstime;
-        $select = $mform->addElement ( 'select', 'coursedisaccess', get_string ( 'coursedisaccess', 'block_hsmail' ), $options );
+        $mform->addElement ( 'select', 'coursedisaccess', get_string ( 'coursedisaccess', 'block_hsmail' ), $options );
 
         $mform->closeHeaderBefore ( 'coursedisaccess_condition' );
         $mform->addRule ( 'coursedisaccess', get_string ( 'required' ), 'required', '', 'client' );

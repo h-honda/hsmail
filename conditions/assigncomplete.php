@@ -39,7 +39,7 @@ class assigncomplete extends hsmailbase {
      * @return string
      */
     public function regist_users_sql($courseid, $planvalue) {
-        global $DB, $CFG;
+        global $DB;
 
         if ( is_array ( $planvalue ) && isset ( $planvalue [1] ) ) {
             $planvaluearray = explode ( ',', $planvalue [1] );
@@ -53,7 +53,7 @@ SQL;
                     $courseid
             ) );
             $assignnumber = count ( $assigninfos );
-            $assignunselectednumber = $assignnumber - $assignselectednumber;
+            $assignunselectnum = $assignnumber - $assignselectednumber;
         }
 
         if ( $planvalue [0] == 'c' ) { // Assign completed.
@@ -171,7 +171,7 @@ class assigncomplete_form extends moodleform {
      * @param unknown $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
-        global $CFG, $DB, $COURSE;
+        global $DB, $COURSE;
 
         // Assign complete status.
         $options = array (

@@ -21,7 +21,7 @@ require_once( $CFG->libdir . '/formslib.php' );
 class hsmail_form extends moodleform {
 
     public function definition() {
-        global $CFG, $COURSE, $OUTPUT;
+        global $CFG, $COURSE;
 
         $mform = $this->_form; // Don't forget the underscore!
 
@@ -121,13 +121,13 @@ JS;
     }
 
     // Custom validation should be added here.
-    public function validation($data, $files) {
+    public function validation($data = '', $files = '') {
         return array ();
     }
 }
 class hsmail_sent_form extends moodleform {
     public function definition() {
-        global $CFG, $COURSE, $OUTPUT;
+        global $CFG, $COURSE;
         $mform = $this->_form; // Don't forget the underscore!
 
         $mform->addElement ( 'hidden', 'id', $COURSE->id, 'id="courseid"' );
@@ -209,8 +209,12 @@ class hsmail_sent_form extends moodleform {
             $tmpmisumi = (array_key_exists ( $tmp->id, $misumi )) ? $misumi [$tmp->id] : 0;
             $row [] = ($tmp->executeflag == 2) ? $tmpsumi + $tmpmisumi : 'error';
             $row [] = (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['start'] ) : '';
-            $row [] = (! array_key_exists ( $tmp->id, $misumi )) ?
-            (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['end'] ) : '' : '';
+            if (! array_key_exists ( $tmp->id, $misumi )) {
+                $buff = (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['end'] ) : '' ;
+            }else{
+                $buff = '';
+            }
+            $row [] = $buff;
 
             $table->data [] = $row;
         }
@@ -220,7 +224,7 @@ class hsmail_sent_form extends moodleform {
         // 2014-04-18 Paging support.
         $mform->addElement ( 'html', $paging );
     }
-    public function validation($data, $files) {
+    public function validation($data = '', $files = '') {
         return array ();
     }
 }
@@ -272,7 +276,7 @@ class hsmail_maillist_form extends moodleform {
         // 2014-04-18 Paging support.
         $mform->addElement ( 'html', $paging );
     }
-    public function validation($data, $files) {
+    public function validation($data = '', $files = '') {
         return array ();
     }
 }

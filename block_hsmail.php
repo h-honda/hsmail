@@ -55,7 +55,7 @@ class block_hsmail extends block_base {
      * @see block_base::get_content()
      */
     public function get_content() {
-        global $CFG, $COURSE, $USER, $DB;
+        global $COURSE, $USER;
 
         if ( $this->content !== null ) {
             return $this->content;
@@ -66,11 +66,6 @@ class block_hsmail extends block_base {
         $this->content->text = $text;
 
         if ( $USER->id != 0 ) {
-            $sql = <<< SQL
-SELECT count(*) FROM {block_hsmail}
-WHERE
-executeflag <= ?
-SQL;
             $context = context_course::instance ( $COURSE->id );
             if ( has_capability ( 'block/hsmail:addcondition', $context ) ) {
                 $this->content->text = $text;

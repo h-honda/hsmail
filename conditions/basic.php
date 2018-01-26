@@ -36,8 +36,6 @@ class basic extends hsmailbase {
      * @return string
      */
     public function regist_users_sql($courseid, $planvalue) {
-        global $DB, $CFG;
-
         $sql = <<< SQL
 SELECT T2.userid AS userid FROM {block_hsmail_temp} AS T2
 SQL;
@@ -93,7 +91,7 @@ class basic_form extends moodleform {
      * @param unknown $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
-        global $CFG, $COURSE;
+        global $COURSE;
 
         $mform->addElement ( 'hidden', 'id', $COURSE->id );
         $mform->addElement ( 'hidden', 'jobid', '0' );

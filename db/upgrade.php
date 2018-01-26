@@ -15,8 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined ( 'MOODLE_INTERNAL' ) || die ();
+/**
+ * Upgrade function.
+ * @param unknown $oldversion
+ * @return boolean
+ */
 function xmldb_block_hsmail_upgrade($oldversion) {
-    global $CFG, $DB;
+    global $DB;
     $dbman = $DB->get_manager ();
 
     $result = true;

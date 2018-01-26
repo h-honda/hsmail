@@ -36,7 +36,6 @@ class target extends hsmailbase {
      * @return string
      */
     public function regist_users_sql($courseid, $planvalue) {
-        global $DB, $CFG;
 
         if ($planvalue == 'a') { // Site user.
             $sql = <<< SQL
@@ -88,7 +87,7 @@ class target_form extends moodleform {
      * @param unknown $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
-        global $CFG, $COURSE;
+        global $COURSE;
 
         $options = array ();
         $options [''] = array ();

@@ -24,9 +24,14 @@ abstract class hsmailbase {
     // Generate plan setting value.
     abstract public function make_plan_data($formdata);
 
-    // Used when special input check is required.
-    // $errormsg Fill in the error message in the field name contents in the subscript.
-    public function validation($data, $files, &$errormsg) {
+    /**
+     * Used when special input check is required.
+     * @param string $data
+     * @param string $files
+     * @param unknown $errormsg Fill in the error message in the field name contents in the subscript.
+     * @return unknown
+     */
+    public function validation($data = '', $files = '', &$errormsg) {
         return $errormsg;
     }
     public function get_target_course() {
