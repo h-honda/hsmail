@@ -33,7 +33,7 @@ abstract class hsmailbase {
      */
     public function validation($data = '', $files = '', &$errormsg) {
         $data = '';
-        $file = '';
+        $files = '';
         return $errormsg;
     }
     public function get_target_course() {

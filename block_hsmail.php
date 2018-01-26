@@ -212,7 +212,7 @@ SQL;
 
                             reset( $tmpuser );
                             $idstmp = array();
-                            foreach ( $tmpuser as $value2 ) {
+                            foreach ($tmpuser as $value2) {
                                 $idstmp[] = $value2->userid;
                             }
                             $ids = implode(',', $idstmp);
@@ -333,7 +333,7 @@ SQL;
 
                 // Delete mail from queue.
                 reset( $tagetmails );
-                foreach ( $tagetmails as $value3 ) {
+                foreach ($tagetmails as $value3) {
                     $DB->delete_records( 'block_hsmail_queue', array ( 'id' => $value3->id ) );
                 }
 
