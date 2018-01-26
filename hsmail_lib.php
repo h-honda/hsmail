@@ -435,7 +435,7 @@ SQL;
      * @return NULL[]
      */
     public function get_sent_list() {
-        global $DB, $CFG;
+        global $DB;
         $sql = <<< SQL
 SELECT hsmail,count(*) AS c FROM {block_hsmail_userlog} GROUP BY hsmail ORDER BY hsmail DESC
 SQL;

@@ -43,7 +43,7 @@ class assigncomplete extends hsmailbase {
 
         if ( is_array ( $planvalue ) && isset ( $planvalue [1] ) ) {
             $planvaluearray = explode ( ',', $planvalue [1] );
-            $assignselectednumber = count ( $planvaluearray );
+            $asignunselect = count ( $planvaluearray );
 
             $assignsql = <<< SQL
 SELECT id FROM {assign} WHERE course= ? order by id
@@ -53,7 +53,7 @@ SQL;
                     $courseid
             ) );
             $assignnumber = count ( $assigninfos );
-            $assignunselectnum = $assignnumber - $assignselectednumber;
+            $assignunselectnum = $assignnumber - $asignunselect;
         }
 
         if ( $planvalue [0] == 'c' ) { // Assign completed.
@@ -73,7 +73,7 @@ INNER JOIN {context} AS con ON con.id = ra.contextid
 INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
 WHERE ra.modifierid >0 AND con.instanceid = {$courseid})
 GROUP BY cmc.userid
-HAVING count(cmc.userid) = {$assignselectednumber}
+HAVING count(cmc.userid) = {$asignunselect}
 SQL;
         } else if ( $planvalue [0] == 'i' ) { // Assign not completed.
 
@@ -103,7 +103,7 @@ INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'assign'
 INNER JOIN {assign} a ON a.id = cm.instance
 WHERE a.id in({$planvalue[1]}) AND (cmc.completionstate = 1 OR cmc.completionstate = 2) AND cm.course = {$courseid}
 GROUP BY cmc.userid
-HAVING count(cmc.userid) = {$assignselectednumber}
+HAVING count(cmc.userid) = {$asignunselect}
 )
 SQL;
             }

@@ -17,7 +17,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once( $CFG->libdir . '/formslib.php' );
-
+/**
+ *
+ * @author h-honda
+ *
+ */
 class hsmail_form extends moodleform {
 
     public function definition() {
@@ -208,10 +212,10 @@ class hsmail_sent_form extends moodleform {
             $tmpsumi = (array_key_exists ( $tmp->id, $sumi )) ? $sumi [$tmp->id] : 0;
             $tmpmisumi = (array_key_exists ( $tmp->id, $misumi )) ? $misumi [$tmp->id] : 0;
             $row [] = ($tmp->executeflag == 2) ? $tmpsumi + $tmpmisumi : 'error';
-            $row [] = (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['start'] ) : '';
+            $row [] = (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['start'] ) : '' ;
             if (! array_key_exists ( $tmp->id, $misumi )) {
                 $buff = (array_key_exists ( $tmp->id, $time )) ? date ( 'Y/m/d H:i', $time [$tmp->id] ['end'] ) : '' ;
-            }else{
+            } else {
                 $buff = '';
             }
             $row [] = $buff;
@@ -228,10 +232,14 @@ class hsmail_sent_form extends moodleform {
         return array ();
     }
 }
-
+/**
+ *
+ * @author h-honda
+ *
+ */
 class hsmail_maillist_form extends moodleform {
     public function definition() {
-        global $CFG, $COURSE, $OUTPUT;
+        global $CFG, $COURSE;
         $mform = $this->_form; // Don't forget the underscore!
 
         $mform->addElement ( 'hidden', 'id', $COURSE->id, 'id="courseid"' );
@@ -282,7 +290,7 @@ class hsmail_maillist_form extends moodleform {
 }
 class hsmail_maildetail_form extends moodleform {
     public function definition() {
-        global $CFG, $COURSE, $OUTPUT;
+        global $CFG, $COURSE;
         $mform = $this->_form; // Don't forget the underscore!
 
         $mform->addElement ( 'hidden', 'id', $COURSE->id, 'id="courseid"' );

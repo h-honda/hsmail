@@ -20,10 +20,6 @@ defined ( 'MOODLE_INTERNAL' ) || die ();
 class hsmaillib_common {
 
     // Email transmission FROM address.
-    // private $mailfrom = '';
-    // private $mailfromdisp = '';
-    // Title of mail transmission.
-    // private $mailsubject = '';
     public function __construct() {
     }
 

@@ -41,7 +41,7 @@ class forumcomplete extends hsmailbase {
 
         if (is_array ( $planvalue ) && isset ( $planvalue [1] )) {
             $planvaluearray = explode ( ',', $planvalue [1] );
-            $forumselectednum = count ( $planvaluearray );
+            $forumselect = count ( $planvaluearray );
 
             $forumsql = <<< SQL
 SELECT id FROM {forum} WHERE course= ? order by id
@@ -51,7 +51,7 @@ SQL;
                     $courseid
             ) );
             $forumnumber = count ( $foruminfos );
-            $forumunselectednumber = $forumnumber - $forumselectednumber;
+            $forumunselectednumber = $forumnumber - $forumselect;
         }
 
         if ($planvalue [0] == 'c') { // Forum completed.
@@ -71,7 +71,7 @@ INNER JOIN {context} AS con ON con.id = ra.contextid
 INNER JOIN {role} AS r ON r.id = ra.roleid AND archetype = 'student'
 WHERE ra.modifierid >0 AND con.instanceid = {$courseid})
 GROUP BY cmc.userid
-HAVING count(cmc.userid) = {$forumselectednumber}
+HAVING count(cmc.userid) = {$forumselect}
 SQL;
         } else if ($planvalue [0] == 'i') { // Forum not completed.
 
@@ -101,7 +101,7 @@ INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'forum'
 INNER JOIN {forum} f ON f.id = cm.instance
 WHERE f.id in({$planvalue[1]}) AND (cmc.completionstate = 1 OR cmc.completionstate = 2) AND cm.course = {$courseid}
 GROUP BY cmc.userid
-HAVING count(cmc.userid) = {$forumselectednumber}
+HAVING count(cmc.userid) = {$forumselect}
 )
 SQL;
             }
