@@ -17,7 +17,7 @@
 /**
  * Form for add hsmail block instances.
  *
- * @package   block_html
+ * @package   block_hsmail
  * @copyright 2017 Human Science Co., Ltd.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

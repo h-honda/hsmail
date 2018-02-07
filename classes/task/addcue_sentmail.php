@@ -14,18 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- *
- * @package block_hsmail
- * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
- */
+
 namespace block_hsmail\task;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- *
- * @author h-honda
- *
+ * Block hsmail.
+ * @package block_hsmail
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class addcue_sentmail extends \core\task\scheduled_task {
     /**
