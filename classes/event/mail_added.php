@@ -23,9 +23,9 @@ namespace block_hsmail\event;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- *
  * @author h-honda
- *
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mail_added extends \core\event\base {
     protected function init() {
