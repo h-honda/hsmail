@@ -1,4 +1,6 @@
 <?php
+use core\event\unknown_logged;
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -131,9 +133,9 @@ SQL;
     }
 
     /**
-     *  Generate configuration array
      * {@inheritDoc}
      * @see hsmailbase::make_plan_data()
+     * @param unknown $formdata
      */
     public function make_plan_data($formdata) {
         if ( isset ( $formdata->assigncomplete ) ) {
@@ -159,6 +161,9 @@ SQL;
      * Perform an individual error check
      * {@inheritDoc}
      * @see hsmailbase::validation()
+     * @param unknown $data
+     * @param unknown $files
+     * @param unknown $errirmsg
      */
     public function validation($data, $files, &$errormsg) {
         if ( $data ['assigncomplete'] != 'a' ) {
@@ -177,6 +182,10 @@ SQL;
  */
 class assigncomplete_form extends moodleform {
 
+    /**
+     * {@inheritDoc}
+     * @see moodleform::definition()
+     */
     public function definition() {
     }
     /**
