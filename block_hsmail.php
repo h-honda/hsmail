@@ -13,10 +13,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- *
  * @package block_hsmail
  * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license GPL v3
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -24,9 +25,9 @@ global $CFG;
 require_once( $CFG->dirroot.'/blocks/moodleblock.class.php' );
 
 /**
- *
  * @author h-honda
- *
+ * @copyright 2013 Human Science Co., Ltd.
+ * @license GPL v3
  */
 class block_hsmail extends block_base {
     /**
