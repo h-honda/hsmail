@@ -14,17 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * HSmail
+ * @package block_hsmail
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined ( 'MOODLE_INTERNAL' ) || die ();
 global $CFG;
 require_once( $CFG->dirroot . '/blocks/hsmail/hsmailbase.php' );
 
 /**
- *
+ * Basic class
  * @author h-honda
- *
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class basic extends hsmailbase {
 
+    /**
+     * Construct
+     */
     public function __construct() {
         $this->conditionname = 'basic';
     }
@@ -47,6 +57,7 @@ SQL;
      *
      * {@inheritDoc}
      * @see hsmailbase::make_plan_data()
+     * @param unknown $formdata
      */
     public function make_plan_data($formdata) {
         return array (
@@ -59,6 +70,7 @@ SQL;
      *
      * {@inheritDoc}
      * @see hsmailbase::get_planvalue()
+     * @param unknown $hsmailid int
      */
     public function get_planvalue($hsmailid = 0) {
         global $DB;
@@ -77,12 +89,18 @@ SQL;
     }
 }
 /**
- *
+ * Basic form class
  * @author h-honda
- *
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class basic_form extends moodleform {
 
+    /**
+     * Definition
+     * {@inheritDoc}
+     * @see moodleform::definition()
+     */
     public function definition() {
     }
     /**
