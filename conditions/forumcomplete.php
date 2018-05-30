@@ -156,9 +156,6 @@ SQL;
      * Perform an individual error check
      * {@inheritDoc}
      * @see hsmailbase::validation()
-     * @param unknown $data
-     * @param unknown $files
-     * @param unknown &$errormsg
      */
     public function validation($data, $files, &$errormsg) {
         if ($data ['forumcomplete'] != 'a') {

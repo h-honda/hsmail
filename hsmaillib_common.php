@@ -15,16 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *
+ * HSmail common
  * @package   block_hsmail
  * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined ( 'MOODLE_INTERNAL' ) || die ();
 
 /**
- *
+ * HSmail lib common class
  * @author h-honda
- *
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hsmaillib_common {
 

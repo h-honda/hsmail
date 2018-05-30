@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- *
+ * Sent list
  * @package   block_hsmail
  * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once( dirname ( dirname ( dirname ( __FILE__ ) ) ) . '/config.php' );
 

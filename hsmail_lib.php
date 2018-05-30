@@ -30,6 +30,10 @@ require_once($CFG->libdir . '/formslib.php' );
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hsmail_detailform extends moodleform {
+    /**
+     * Job id
+     * @var integer
+     */
     protected $jobid = 0;
     /**
      * Initializing variables.
@@ -129,19 +133,35 @@ class hsmail_detailform extends moodleform {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hsmail_lib {
-    // Location of condition file.
+    /**
+     * Location of condition file.
+     * @var unknown
+     */
     protected $conditiondir;
 
-    // List of condition files.
+    /**
+     * List of condition files.
+     * @var unknown
+     */
     public $conditionfiles;
 
-    // Total number of data.
+    /**
+     * Total number of data.
+     * @var unknown
+     */
     protected $totalcount;
 
-    // Number of pages displayed per page.
-    protected $perpage = 20; // Default value: Overwritten by block instance setting value.
+    /**
+     * Number of pages displayed per page.
+     * Default value: Overwritten by block instance setting value.
+     * @var integer
+     */
+    protected $perpage = 20;
 
-    // Page number.
+    /**
+     * Page number.
+     * @var integer
+     */
     protected $page = 0;
 
     /**
