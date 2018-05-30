@@ -18,7 +18,7 @@
  * Detail form.
  * @package   block_hsmail
  * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
- * @license GPL v3
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php' );
@@ -27,6 +27,7 @@ require_once($CFG->libdir . '/formslib.php' );
  * Hsmail detailed form.
  * @author h-honda
  * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hsmail_detailform extends moodleform {
     protected $jobid = 0;
@@ -124,7 +125,8 @@ class hsmail_detailform extends moodleform {
 /**
  * Mail Sender Class.
  * @author h-honda
- *
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hsmail_lib {
     // Location of condition file.
@@ -142,6 +144,9 @@ class hsmail_lib {
     // Page number.
     protected $page = 0;
 
+    /**
+     * Construct
+     */
     public function __construct() {
         global $CFG;
 

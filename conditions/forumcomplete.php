@@ -13,16 +13,22 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
+/**
+ * Forum Complete.
+ * @package block_hsmail
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/blocks/hsmail/hsmailbase.php' );
 require_once($CFG->dirroot . '/lib/completionlib.php' );
 /**
- *
+ * Forum complete class
  * @author h-honda
- *
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class forumcomplete extends hsmailbase {
 
@@ -121,6 +127,7 @@ SQL;
      * Generate configuration array
      * {@inheritDoc}
      * @see hsmailbase::make_plan_data()
+     * @param unknown $formdata
      */
     public function make_plan_data($formdata) {
         if (isset ( $formdata->forumcomplete )) {
@@ -146,6 +153,9 @@ SQL;
      * Perform an individual error check
      * {@inheritDoc}
      * @see hsmailbase::validation()
+     * @param unknown $data
+     * @param unknown $files
+     * @param unknown &$errormsg
      */
     public function validation($data, $files, &$errormsg) {
         if ($data ['forumcomplete'] != 'a') {
@@ -157,12 +167,18 @@ SQL;
     }
 }
 /**
- *
+ * forumcomplete form class
  * @author h-honda
- *
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class forumcomplete_form extends moodleform {
 
+    /**
+     * Definition
+     * {@inheritDoc}
+     * @see moodleform::definition()
+     */
     public function definition() {
     }
     /**

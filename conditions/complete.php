@@ -14,18 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Complete.
+ * @package block_hsmail
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined ( 'MOODLE_INTERNAL' ) || die ();
 global $CFG;
 require_once($CFG->dirroot . '/blocks/hsmail/hsmailbase.php' );
 require_once($CFG->dirroot . '/lib/completionlib.php' );
 
 /**
- *
+ * Complete class
  * @author h-honda
- *
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class complete extends hsmailbase {
 
+    /**
+     * construct
+     */
     public function __construct() {
         $this->conditionname = 'complete';
     }
@@ -65,6 +75,7 @@ SQL;
      * Generate configuration array
      * {@inheritDoc}
      * @see hsmailbase::make_plan_data()
+     * @param unknown $formdata
      */
     public function make_plan_data($formdata) {
         if ( isset ( $formdata->complete ) ) {
@@ -77,9 +88,10 @@ SQL;
     }
 }
 /**
- *
+ * complete form class
  * @author h-honda
- *
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class complete_form extends moodleform {
 

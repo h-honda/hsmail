@@ -13,19 +13,28 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
+/**
+ * Quiz Complete.
+ * @package block_hsmail
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once( $CFG->dirroot . '/blocks/hsmail/hsmailbase.php' );
 require_once( $CFG->dirroot . '/lib/completionlib.php' );
 /**
- *
+ * Quiz complete class
  * @author h-honda
- *
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class quizcomplete extends hsmailbase {
 
+    /**
+     * Construct.
+     */
     public function __construct() {
         $this->conditionname = 'quizcomplete';
     }
@@ -119,6 +128,7 @@ SQL;
      * Generate configuration array
      * {@inheritDoc}
      * @see hsmailbase::make_plan_data()
+     * @param unknown $formdata
      */
     public function make_plan_data($formdata) {
         if (isset ( $formdata->quizcomplete )) {
@@ -144,6 +154,9 @@ SQL;
      * Perform an individual error check
      * {@inheritDoc}
      * @see hsmailbase::validation()
+     * @param unknown $data
+     * @param unknown $files
+     * @param unknown &$errormsg
      */
     public function validation($data, $files, &$errormsg) {
         if ($data ['quizcomplete'] != 'a') {
@@ -155,12 +168,18 @@ SQL;
     }
 }
 /**
- *
+ * Quiz complete form class
  * @author h-honda
- *
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class quizcomplete_form extends moodleform {
 
+    /**
+     * Definition
+     * {@inheritDoc}
+     * @see moodleform::definition()
+     */
     public function definition() {
     }
     /**

@@ -14,19 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- *
+ * HSmail form
  * @package   block_hsmail
  * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 require_once( $CFG->libdir . '/formslib.php' );
 /**
- *
+ * HSmail form class
  * @author h-honda
- *
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hsmail_form extends moodleform {
-
+    /**
+     * Definition
+     * {@inheritDoc}
+     * @see moodleform::definition()
+     */
     public function definition() {
         global $CFG, $COURSE;
 
@@ -127,7 +133,13 @@ JS;
         $mform->addElement ( 'html', $paging );
     }
 
-    // Custom validation should be added here.
+    /**
+     * Custom validation should be added here.
+     * {@inheritDoc}
+     * @see moodleform::validation()
+     * @param unknown $data
+     * @param unknown $files
+     */
     public function validation($data = '', $files = '') {
         $data = '';
         $files = '';
@@ -135,11 +147,17 @@ JS;
     }
 }
 /**
- *
+ * HSmail sent form class
  * @author h-honda
- *
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hsmail_sent_form extends moodleform {
+    /**
+     * Definition
+     * {@inheritDoc}
+     * @see moodleform::definition()
+     */
     public function definition() {
         global $CFG, $COURSE;
         $mform = $this->_form; // Don't forget the underscore!
@@ -238,6 +256,13 @@ class hsmail_sent_form extends moodleform {
         // 2014-04-18 Paging support.
         $mform->addElement ( 'html', $paging );
     }
+    /**
+     * Validation function
+     * {@inheritDoc}
+     * @see moodleform::validation()
+     * @param unknown $data
+     * @param unknown $files
+     */
     public function validation($data = '', $files = '') {
         $data = '';
         $files = '';
@@ -245,11 +270,17 @@ class hsmail_sent_form extends moodleform {
     }
 }
 /**
- *
+ * hsmail maillist form class
  * @author h-honda
- *
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hsmail_maillist_form extends moodleform {
+    /**
+     * Definition
+     * {@inheritDoc}
+     * @see moodleform::definition()
+     */
     public function definition() {
         global $CFG, $COURSE;
         $mform = $this->_form; // Don't forget the underscore!
@@ -296,6 +327,13 @@ class hsmail_maillist_form extends moodleform {
         // 2014-04-18 Paging support.
         $mform->addElement ( 'html', $paging );
     }
+    /**
+     * Validation
+     * {@inheritDoc}
+     * @see moodleform::validation()
+     * @param unknown $data
+     * @param unknown $files
+     */
     public function validation($data = '', $files = '') {
         $data = '';
         $files = '';
@@ -303,13 +341,14 @@ class hsmail_maillist_form extends moodleform {
     }
 }
 /**
- *
+ * HSmail mail detail form class
  * @author h-honda
- *
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hsmail_maildetail_form extends moodleform {
     /**
-     *
+     * Definition
      * {@inheritDoc}
      * @see moodleform::definition()
      */
@@ -332,9 +371,11 @@ class hsmail_maildetail_form extends moodleform {
                 nl2br ( htmlspecialchars ( $this->conv_placeholder ( $maildetail->mailbody ) ) ) );
     }
     /**
-     *
+     * Validation
      * {@inheritDoc}
      * @see moodleform::validation()
+     * @param unknown $data
+     * @param unknown $files
      */
     public function validation($data, $files) {
         $data = '';

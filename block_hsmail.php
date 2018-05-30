@@ -15,19 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * HSmail
  * @package block_hsmail
  * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
- * @license GPL v3
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once( $CFG->dirroot.'/blocks/moodleblock.class.php' );
 
 /**
+ * Block hsmail
  * @author h-honda
  * @copyright 2013 Human Science Co., Ltd.
- * @license GPL v3
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_hsmail extends block_base {
     /**

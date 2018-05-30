@@ -14,23 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- *
+ * HSmail base
  * @package   block_hsmail
  * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined ( 'MOODLE_INTERNAL' ) || die ();
 
 /**
- *
+ * HSmail base class
  * @author h-honda
- *
+ * @copyright 2013 Human Science CO., Ltd.  {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class hsmailbase {
     protected $conditionname;
-    // Sending user registration.
+    /**
+     * Sending user registration.
+     * @param unknown $courseid
+     * @param unknown $planvalue
+     */
     abstract public function regist_users_sql($courseid, $planvalue);
-    // Generate plan setting value.
+
+    /**
+     * Generate plan setting value.
+     * @param unknown $formdata
+     */
     abstract public function make_plan_data($formdata);
 
     /**
@@ -45,6 +55,10 @@ abstract class hsmailbase {
         $files = '';
         return $errormsg;
     }
+    /**
+     * Get target course
+     * @return mixed|boolean
+     */
     public function get_target_course() {
         global $DB;
         $sql = <<< SQL
