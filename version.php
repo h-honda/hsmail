@@ -21,8 +21,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
-$plugin->version  = 2018053000;
+$plugin->version  = 2018053001;
 $plugin->requires = 2016052303;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '1.4.9';
+$plugin->release = '1.4.10';
 $plugin->component = 'block_hsmail';
