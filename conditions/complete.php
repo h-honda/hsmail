@@ -95,6 +95,11 @@ SQL;
  */
 class complete_form extends moodleform {
 
+    /**
+     * Definition
+     * {@inheritDoc}
+     * @see moodleform::definition()
+     */
     public function definition() {
     }
     /**

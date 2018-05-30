@@ -13,15 +13,28 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
+/**
+ * Coursed is access
+ * @package block_hsmail
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined ( 'MOODLE_INTERNAL' ) || die ();
 
 global $CFG;
 require_once( $CFG->dirroot . '/blocks/hsmail/hsmailbase.php' );
 require_once( $CFG->dirroot . '/lib/completionlib.php' );
-
+/**
+ * Coursed is access class
+ * @package block_hsmail
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class coursedisaccess extends hsmailbase {
 
+    /**
+     * Construct
+     */
     public function __construct() {
         $this->conditionname = 'coursedisaccess';
     }
@@ -71,6 +84,7 @@ SQL;
      * Generate configuration array
      * {@inheritDoc}
      * @see hsmailbase::make_plan_data()
+     * @param unknown $formdata
      */
     public function make_plan_data($formdata) {
         if ( isset ( $formdata->coursedisaccess ) ) {
@@ -83,12 +97,17 @@ SQL;
     }
 }
 /**
- *
- * @author h-honda
- *
+ * Coursed is access form class
+ * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class coursedisaccess_form extends moodleform {
 
+    /**
+     * Definition
+     * {@inheritDoc}
+     * @see moodleform::definition()
+     */
     public function definition() {
     }
     /**

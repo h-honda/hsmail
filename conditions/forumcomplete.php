@@ -32,6 +32,9 @@ require_once($CFG->dirroot . '/lib/completionlib.php' );
  */
 class forumcomplete extends hsmailbase {
 
+    /**
+     * Constrcut
+     */
     public function __construct() {
         $this->conditionname = 'forumcomplete';
     }

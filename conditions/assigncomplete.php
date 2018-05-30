@@ -161,7 +161,7 @@ SQL;
      * @see hsmailbase::validation()
      * @param unknown $data
      * @param unknown $files
-     * @param unknown $errirmsg
+     * @param unknown &$errormsg
      */
     public function validation($data, $files, &$errormsg) {
         if ( $data ['assigncomplete'] != 'a' ) {
@@ -188,7 +188,7 @@ class assigncomplete_form extends moodleform {
     }
     /**
      * Setting screen
-     * @param unknown $mform
+     * @param unknown &$mform
      * @param unknown $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
