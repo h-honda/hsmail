@@ -37,7 +37,7 @@ class hsmaillib_common {
      * @param array $from sender array('address'=>Source address, name => Source display name)
      * @param string $subject Mail title
      * @param string $body the content of the email
-     * @param unknown $attachmentfile Attachment.array('file_name'=>file name, file_body=>String of file contents)
+     * @param mixed $attachmentfile Attachment.array('file_name'=>file name, file_body=>String of file contents)
      * @return boolean
      */
     public function send_mail($to = null, $from = array(), $subject = null, $body = null, $attachmentfiles = array()) {

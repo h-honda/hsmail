@@ -154,6 +154,9 @@ SQL;
      * Perform an individual error check
      * {@inheritDoc}
      * @see hsmailbase::validation()
+     * @param mixed $data
+     * @param object $files
+     * @param array $errormsg
      */
     public function validation($data, $files, &$errormsg) {
         if ($data ['quizcomplete'] != 'a') {

@@ -16,7 +16,6 @@
 
 /**
  * HSmail
- *
  * @package block_hsmail
  * @copyright 2013 Human Science Co., Ltd. {@link http://www.science.co.jp}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

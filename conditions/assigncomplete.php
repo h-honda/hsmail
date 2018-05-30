@@ -159,6 +159,9 @@ SQL;
      * Perform an individual error check
      * {@inheritDoc}
      * @see hsmailbase::validation()
+     * @param mixed $data
+     * @param object $files
+     * @param array $errormsg
      */
     public function validation($data, $files, &$errormsg) {
         if ( $data ['assigncomplete'] != 'a' ) {
@@ -185,8 +188,8 @@ class assigncomplete_form extends moodleform {
     }
     /**
      * Setting screen
-     * @param unknown &$mform
-     * @param unknown $defaultdata
+     * @param object &$mform
+     * @param mixed $defaultdata
      */
     public function build_form(&$mform, $defaultdata = null) {
         global $DB, $COURSE;

@@ -29,17 +29,21 @@ defined ( 'MOODLE_INTERNAL' ) || die ();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class hsmailbase {
+    /**
+     * Condition name
+     * @var string
+     */
     protected $conditionname;
     /**
      * Sending user registration.
-     * @param unknown $courseid
-     * @param unknown $planvalue
+     * @param int $courseid
+     * @param array $planvalue
      */
     abstract public function regist_users_sql($courseid, $planvalue);
 
     /**
      * Generate plan setting value.
-     * @param unknown $formdata
+     * @param mixed $formdata
      */
     abstract public function make_plan_data($formdata);
 
@@ -47,8 +51,8 @@ abstract class hsmailbase {
      * Used when special input check is required.
      * @param string $data
      * @param string $files
-     * @param unknown $errormsg Fill in the error message in the field name contents in the subscript.
-     * @return unknown
+     * @param array $errormsg Fill in the error message in the field name contents in the subscript.
+     * @return array
      */
     public function validation($data = '', $files = '', &$errormsg) {
         $data = '';
